@@ -30,3 +30,12 @@ services:
     command: npm run start
     expose:
       - 8000
+
+  stockdata:
+    container_name: stockdata
+    build:
+      context: ./t2m-data
+      dockerfile: Dockerfile
+    command: npm run start
+    expose:
+      - 8080

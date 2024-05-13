@@ -18,6 +18,7 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 RUN echo "NEXT_PUBLIC_API_URL=" > .env
+RUN echo "NEXT_PUBLIC_STOCK_API=" > .env
 RUN \
     if [ -f yarn.lock ]; then yarn run build; \
     elif [ -f package-lock.json ]; then npm run build; \

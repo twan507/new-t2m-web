@@ -19,9 +19,7 @@ require('dotenv').config()
 
 @Module({
   imports: [UsersModule, AuthModule, 
-
     ScheduleModule.forRoot(),
-
     MongooseModule.forRootAsync({
       useFactory: async () => ({
         uri: process.env.MONGODB_URL,
