@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 
-const Treemap = ({ data }) => {
+const Treemap = ({ data, ww, pixel }) => {
     const ref = useRef();
     const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
@@ -71,7 +71,7 @@ const Treemap = ({ data }) => {
             .join('tspan')
             .attr('x', 5)
             .attr('y', (d, i) => `${i * 1.1 + 1}em`)
-            .attr('font-size', (d, i) => i === 0 ? '15px' : '13px')  // Cỡ chữ lớn hơn cho tên
+            .attr('font-size', (d, i) => i === 0 ? pixel(0.013, 12) : pixel(0.011, 10))  // Cỡ chữ lớn hơn cho tên pixel(0.014, 10)
             .attr('font-family', 'Calibri')
             .attr('font-weight', (d, i) => i === 0 ? 'bold' : 'normal')  // Chỉ tên có chữ đậm
             .text(d => d);

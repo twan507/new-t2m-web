@@ -35,11 +35,11 @@ const MarketTopStockChart = (props: any) => {
     if (!checkAuth) {
         return (
             <>
-                <div style={{ marginTop: '40px', height: '100px', width: '100%' }}>
-                    <Treemap data={top_data}  ww={ww} pixel={pixel}/>
+                <div style={{ marginTop: '40px', height: '115px', width: '100%' }}>
+                    <Treemap data={top_data} ww={props.ww} pixel={props.pixel} />
                 </div>
-                <div style={{ marginTop: '-3px', height: '100px', width: '100%' }}>
-                    <Treemap data={bottom_data}  ww={ww} pixel={pixel}/>
+                <div style={{ marginTop: '-3px', height: '115px', width: '100%' }}>
+                    <Treemap data={bottom_data} ww={props.ww} pixel={props.pixel} />
                 </div>
             </>
         )
