@@ -7,11 +7,8 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 
-interface IProps {
-  width: string;
-  height: string;
-}
-const MarketBreathChart = (props: IProps) => {
+
+const MarketBreathChart = (props: any) => {
   const getData = async (tableName: string) => {
     const res = await sendRequest<IBackendRes<any>>({
       url: `${process.env.NEXT_PUBLIC_STOCK_API}/stock/v1/database/${tableName}`,
@@ -61,7 +58,7 @@ const MarketBreathChart = (props: IProps) => {
         font: {
           family: 'Calibri',
           weight: 'bold',
-          size: 15
+          size:  props?.pixel(0.012, 11)
         },
         textAlign: 'center',
         align: 'end',
@@ -86,11 +83,12 @@ const MarketBreathChart = (props: IProps) => {
         displayColors: true, // Kiểm soát việc hiển thị ô màu trong tooltip
         usePointStyle: true, // Sử dụng point style (hình dáng được định nghĩa trong datasets cho ô màu)
         bodyFontColor: 'white', // Màu chữ của tooltip
-        bodyFontSize: 14, // Cỡ chữ trong tooltip
+        bodyFontSize: '14px', // Cỡ chữ trong tooltip
         bodyFontStyle: 'bold', // Kiểu chữ trong tooltip
         boxWidth: 20, // Kích thước của ô màu
       },
       legend: {
+        display: props?.ww > 500,
         position: 'right', // Đặt vị trí của legend sang bên phải
         align: 'center', // Căn giữa legend theo chiều dọc
         labels: {
@@ -100,7 +98,7 @@ const MarketBreathChart = (props: IProps) => {
           pointStyle: 'circle', // Đặt kiểu điểm thành hình tròn
           usePointStyle: true, // Bảo đảm sử dụng pointStyle cho biểu tượng
           font: {
-            size: 16, // Điều chỉnh cỡ chữ của legend
+            size: props?.pixel(0.012, 12), // Điều chỉnh cỡ chữ của legend
             family: 'Calibri', // Điều chỉnh font chữ của legend
           },
           color: 'white'
@@ -116,7 +114,7 @@ const MarketBreathChart = (props: IProps) => {
 
   if (!checkAuth) {
     return (
-      <div style={{ width: props?.width, height: props?.height, marginTop: '40px' }}> {/* Điều chỉnh kích thước container */}
+      <div style={{ width: props?.width, height: props?.height, marginTop: '40px', display: 'flex', alignItems: 'center' }}> {/* Điều chỉnh kích thước container */}
         <Pie data={data} options={options} />
       </div>
     )

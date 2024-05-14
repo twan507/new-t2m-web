@@ -2,12 +2,8 @@ import { sendRequest } from "@/utlis/api";
 import Treemap from "../../../../../components/chart/treemap";
 import { useEffect, useState } from "react";
 
-interface IProps {
-    width: number;
-    height: number;
-  }
 
-const MarketTopStockChart = (props: IProps) => {
+const MarketTopStockChart = (props: any) => {
     const getData = async (tableName: string) => {
         const res = await sendRequest<IBackendRes<any>>({
             url: `${process.env.NEXT_PUBLIC_STOCK_API}/stock/v1/database/${tableName}`,
@@ -39,11 +35,11 @@ const MarketTopStockChart = (props: IProps) => {
     if (!checkAuth) {
         return (
             <>
-                <div style={{ marginTop: '40px' }}>
-                    <Treemap data={top_data} width={props?.width} height={props?.height/2} />
+                <div style={{ marginTop: '40px', height: '100px', width: '100%' }}>
+                    <Treemap data={top_data}  ww={ww} pixel={pixel}/>
                 </div>
-                <div style={{ marginTop: '-3px' }}>
-                    <Treemap data={bottom_data} width={props?.width} height={props?.height/2} />
+                <div style={{ marginTop: '-3px', height: '100px', width: '100%' }}>
+                    <Treemap data={bottom_data}  ww={ww} pixel={pixel}/>
                 </div>
             </>
         )

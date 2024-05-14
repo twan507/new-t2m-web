@@ -1,10 +1,33 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 
-const Treemap = ({ data, width = 960, height = 500 }) => {
+const Treemap = ({ data }) => {
     const ref = useRef();
+    const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
     useEffect(() => {
+        const updateDimensions = () => {
+            if (ref.current) {
+                const { width, height } = ref.current.parentElement.getBoundingClientRect();
+                setDimensions({ width, height });
+            }
+        };
+
+        // Sử dụng ResizeObserver để cập nhật kích thước khi phần tử cha thay đổi
+        const resizeObserver = new ResizeObserver(updateDimensions);
+        if (ref.current) {
+            resizeObserver.observe(ref.current.parentElement);
+        }
+
+        return () => {
+            resizeObserver.disconnect();
+        };
+    }, []);
+
+    useEffect(() => {
+        const { width, height } = dimensions;
+        if (width === 0 || height === 0) return; // Đợi kích thước được cập nhật
+
         const svg = d3.select(ref.current)
             .attr('width', width)
             .attr('height', height)
@@ -48,12 +71,12 @@ const Treemap = ({ data, width = 960, height = 500 }) => {
             .join('tspan')
             .attr('x', 5)
             .attr('y', (d, i) => `${i * 1.1 + 1}em`)
-            .attr('font-size', (d, i) => i === 0 ? '15px' : '14px')  // Cỡ chữ lớn hơn cho tên
+            .attr('font-size', (d, i) => i === 0 ? '15px' : '13px')  // Cỡ chữ lớn hơn cho tên
             .attr('font-family', 'Calibri')
             .attr('font-weight', (d, i) => i === 0 ? 'bold' : 'normal')  // Chỉ tên có chữ đậm
             .text(d => d);
 
-    }, [data, width, height]); // Cập nhật các props
+    }, [data, dimensions]); // Cập nhật các props
 
     return (
         <svg ref={ref}></svg>
