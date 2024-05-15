@@ -7,6 +7,10 @@ import MarketTopStockChart from "./components/chi_so_thi_truong/market_top_stock
 import IndexPriceChart from "./components/chi_so_thi_truong/index_price_chart";
 import './styles.css'
 import TaTable from "./components/chi_so_thi_truong/index_ta_table";
+import SentimentGaugeChart from "./components/trang_thai_thi_truong/sentiment_gauge_chart";
+import LiquidityGaugeChart from "./components/trang_thai_thi_truong/liquidity_gauge_chart";
+import SentimentLineChart from "./components/trang_thai_thi_truong/sentiment_line_chart";
+import LiquidityLineChart from "./components/trang_thai_thi_truong/liquidity_line_chart";
 
 const useWindowWidth = () => {
   const [windowWidth, setWindowWidth] = useState(Math.min(window.innerWidth, 1250));
@@ -41,6 +45,12 @@ export default function Page1() {
       set_index_price_chart_df(res.data)
     } else if (tableName === 'ta_index_df') {
       set_ta_index_df(res.data)
+    } else if (tableName === 'market_sentiment') {
+      set_market_sentiment(res.data)
+    } else if (tableName === 'itd_score_liquidity_last') {
+      set_itd_score_liquidity_last(res.data)
+    } else if (tableName === 'itd_score_liquidity_df') {
+      set_itd_score_liquidity_df(res.data)
     }
   }
 
@@ -50,6 +60,9 @@ export default function Page1() {
     getData('market_info_df')
     getData('index_price_chart_df')
     getData('ta_index_df')
+    getData('market_sentiment')
+    getData('itd_score_liquidity_last')
+    getData('itd_score_liquidity_df')
   }, [])
 
   //State lưu trữ dữ liệu cổ phiếu
@@ -58,6 +71,9 @@ export default function Page1() {
   const [market_info_df, set_market_info_df] = useState<any[]>([]);
   const [index_price_chart_df, set_index_price_chart_df] = useState<any[]>([]);
   const [ta_index_df, set_ta_index_df] = useState<any[]>([]);
+  const [market_sentiment, set_market_sentiment] = useState<any[]>([]);
+  const [itd_score_liquidity_last, set_itd_score_liquidity_last] = useState<any[]>([]);
+  const [itd_score_liquidity_df, set_itd_score_liquidity_df] = useState<any[]>([]);
 
   //State lưu giữ trạng thái hiển thị của các nút bấm
   const [chi_so_thi_truong, set_chi_so_thi_truong] = useState('TQ');
@@ -104,6 +120,22 @@ export default function Page1() {
       label: 'PTKT',
     },
   ];
+
+  const getColorSentiment = (value: number) => {
+    if (value < 20) return '#00cccc'; // Đỏ
+    if (value < 40) return '#e14040'; // Cam
+    if (value < 60) return '#D0be0f'; // Vàng
+    if (value < 80) return '#24B75E'; // Xanh lá cây
+    return '#C031C7'; // Xanh đậm
+  };
+
+  const getColorLiquidity = (value: number) => {
+    if (value < 70) return '#00cccc'; // Đỏ
+    if (value < 90) return '#e14040'; // Cam
+    if (value < 110) return '#D0be0f'; // Vàng
+    if (value < 130) return '#24B75E'; // Xanh lá cây
+    return '#C031C7'; // Xanh đậm
+  };
 
   const [checkAuth, setCheckAuth] = useState(true);
   useEffect(() => {
@@ -595,6 +627,73 @@ export default function Page1() {
                   </Row>
                 </Col>
               </Row >
+              <Row style={{ display: 'flex', flexDirection: 'column', marginBottom: '20px', marginTop: '50px' }}>
+                <p style={{ color: 'white', fontSize: pixel(0.025, 18), fontFamily: 'Calibri, sans-serif', margin: 0, padding: 0, fontWeight: 'bold' }}>Trạng thái thị trường</p>
+                <p style={{ color: 'white', fontSize: pixel(0.011, 10), fontFamily: 'Calibri, sans-serif', margin: 0, padding: 0 }}>{update_time[0]?.date}</p>
+              </Row>
+              <Row gutter={10}>
+                <Col xs={8} sm={7} md={5} lg={5} xl={4}>
+                  <div style={{ background: '#161616', padding: '10px', borderRadius: '5px', margin: 0, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                    <p style={{
+                      color: 'white', fontSize: pixel(0.016, 11), fontFamily: 'Calibri, sans-serif', fontWeight: 'bold', margin: 0, padding: 0, width: '100%', display: 'flex', justifyContent: 'center'
+                    }}> Trạng thái tâm lý
+                    </p>
+                    <SentimentGaugeChart data={market_sentiment} width='100%' height='150px' ww={ww} />
+                  </div>
+                  <div style={{
+                    background: getColorSentiment(market_sentiment[0]?.last_ratio),
+                    padding: '10px', borderRadius: '5px', margin: 0, display: 'flex', flexDirection: 'column', justifyContent: 'center', marginTop: '10px', height: '40px'
+                  }}>
+                    <p style={{
+                      color: 'white', fontSize: pixel(0.016, 11), fontFamily: 'Calibri, sans-serif', fontWeight: 'bold', margin: 0, padding: 0, width: '100%', display: 'flex', justifyContent: 'center'
+                    }}> {market_sentiment[0]?.last_sentiment}
+                    </p>
+                  </div>
+                </Col>
+                <Col xs={16} sm={17} md={19} lg={19} xl={20}>
+                  <SentimentLineChart data={market_sentiment} width='100%' height='270px' />
+                </Col>
+              </Row>
+              <Row gutter={10} style={{ marginTop: '20px' }}>
+                <Col xs={8} sm={7} md={5} lg={5} xl={4}>
+                  <div style={{ background: '#161616', padding: '10px', borderRadius: '5px', margin: 0, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                    <p style={{
+                      color: 'white', fontSize: pixel(0.016, 11), fontFamily: 'Calibri, sans-serif', fontWeight: 'bold', margin: 0, padding: 0, width: '100%', display: 'flex', justifyContent: 'center'
+                    }}> Chỉ số thanh khoản
+                    </p>
+                    <LiquidityGaugeChart data={itd_score_liquidity_last} width='100%' height='150px' ww={ww} />
+                  </div>
+                  <div style={{
+                    background: getColorLiquidity(itd_score_liquidity_last.filter((item: any) => item.name === 'Thị trường')[0]?.liquidity * 100),
+                    padding: '10px', borderRadius: '5px', margin: 0, display: 'flex', flexDirection: 'column', justifyContent: 'center', marginTop: '10px', height: '40px'
+                  }}>
+                    <p style={{
+                      color: 'white', fontSize: pixel(0.016, 11), fontFamily: 'Calibri, sans-serif', fontWeight: 'bold', margin: 0, padding: 0, width: '100%', display: 'flex', justifyContent: 'center'
+                    }}> {itd_score_liquidity_last.filter((item: any) => item.name === 'Thị trường')[0]?.liquid_state}
+                    </p>
+                  </div>
+                </Col>
+                <Col xs={16} sm={17} md={19} lg={19} xl={20}>
+                  <LiquidityLineChart data={itd_score_liquidity_df} width='100%' height='270px' />
+                </Col>
+              </Row>
+
+
+
+
+
+
+
+
+
+              <Row>
+                <div style={{ background: '#161616', padding: '10px', borderRadius: '5px', margin: 0, display: 'flex', flexDirection: 'column', justifyContent: 'center', marginTop: '10px', height: '500px' }}>
+                  <p style={{
+                    color: 'white', fontSize: pixel(0.016, 10), fontFamily: 'Calibri, sans-serif', fontWeight: 'bold', margin: 0, padding: 0, width: '100%', display: 'flex', justifyContent: 'center'
+                  }}> Trung lập
+                  </p>
+                </div>
+              </Row>
             </Col >
           </Row >
         </Col >

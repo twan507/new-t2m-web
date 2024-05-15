@@ -2,33 +2,32 @@
 import React from 'react';
 import { Doughnut } from 'react-chartjs-2';
 import { Chart, ArcElement, Tooltip, Legend, ChartData, ChartOptions } from 'chart.js';
-import './page.css';
+import './gauge.css';
 
 Chart.register(ArcElement, Tooltip, Legend);
 
 const getColor = (value: number) => {
-  if (value < 20) return '#ff0000'; // Đỏ
-  if (value < 40) return '#ffa500'; // Cam
-  if (value < 60) return '#ffff00'; // Vàng
-  if (value < 80) return '#00ff00'; // Xanh lá cây
-  return '#008000'; // Xanh đậm
+  if (value < 70) return '#00cccc'; // Đỏ
+  if (value < 90) return '#e14040'; // Cam
+  if (value < 110) return '#D0be0f'; // Vàng
+  if (value < 130) return '#24B75E'; // Xanh lá cây
+  return '#C031C7'; // Xanh đậm
 };
 
 const drawCenterText = {
   id: 'drawCenterText',
   beforeDraw: (chart: any) => {
     const { width, height, ctx } = chart;
-    const text = chart.config.options?.plugins?.center?.text || '';
-    const color = chart.config.options?.plugins?.center?.color || '#000';
+    const text = chart.config.options?.plugins?.center?.text;
+    const color = chart.config.options?.plugins?.center?.color;
+    const ww = chart.config.options?.plugins?.center?.ww;
     const fontStyle = 'Calibri';
-
     ctx.save();
-    ctx.font = `bold ${Math.round((height as number) / 4)}px ${fontStyle}`;
+    ctx.font = `bold ${Math.round(Math.sqrt((width as number) * 3))}px ${fontStyle}`;
     ctx.textBaseline = 'middle';
     ctx.textAlign = 'center';
-
-    const centerX = width / 1.9;
-    const centerY = height / 1.1; // Điều chỉnh vị trí Y để văn bản nằm ở cạnh dưới của biểu đồ
+    const centerX = width / 1.95;
+    const centerY = 120 - 10000/ww;
     ctx.fillStyle = color;
     ctx.fillText(text, centerX, centerY);
     ctx.restore();
@@ -37,16 +36,16 @@ const drawCenterText = {
 
 Chart.register(drawCenterText);
 
-const TaGaugeChart: React.FC<{}> = ({ }) => {
+const LiquidityGaugeChart = (props: any) => {
+  const value: any = (props?.data?.filter((item: any) => item.name === 'Thị trường')[0]?.liquidity*100)?.toFixed(2);
 
-  const value = 20.15
   const data: any = {
     datasets: [
       {
-        data: [value, 100 - value], // Tỷ lệ phần trăm của gauge
-        backgroundColor: [getColor(value), '#e0e0e0'], // Màu sắc của gauge
+        data: [value, 130 - value], // Tỷ lệ phần trăm của gauge
+        backgroundColor: [getColor(value), '#dfdfdf'], // Màu sắc của gauge
         borderWidth: 0,
-        cutout: '80%',
+        cutout: '75%',
         rotation: 270,
         circumference: 180,
         weight: 1,
@@ -57,7 +56,7 @@ const TaGaugeChart: React.FC<{}> = ({ }) => {
   const options: any = {
     rotation: -90,
     circumference: 180,
-    cutout: '80%',
+    cutout: '75%',
     plugins: {
       tooltip: {
         enabled: false,
@@ -65,9 +64,13 @@ const TaGaugeChart: React.FC<{}> = ({ }) => {
       legend: {
         display: false,
       },
+      datalabels: {
+        display: false, // Vô hiệu hóa datalabels
+      },
       center: {
         text: `${value}%`,
         color: getColor(value),
+        ww: props?.ww
       },
     },
     responsive: true,
@@ -75,10 +78,10 @@ const TaGaugeChart: React.FC<{}> = ({ }) => {
   };
 
   return (
-    <div className="ta-gauge-chart-container">
+    <div className="ta-gauge-chart-container" style={{ height: props?.height, width: props?.width }}>
       <Doughnut data={data} options={options} />
     </div>
   );
 };
 
-export default TaGaugeChart;
+export default LiquidityGaugeChart;

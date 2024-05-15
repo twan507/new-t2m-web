@@ -51,6 +51,7 @@ const IndexPriceChart = (props: any) => {
 				intersect: false,
 				displayColors: true, // Kiểm soát việc hiển thị ô màu trong tooltip
 				usePointStyle: true, // Sử dụng point style (hình dáng được định nghĩa trong datasets cho ô màu)
+				caretPadding: 20, // Kéo ô tooltip ra xa khỏi điểm dữ liệu một chút
 				callbacks: {
 					label: function (tooltipItem: any) {
 						return ` ${tooltipItem.dataset.label}: ${tooltipItem.raw}`;

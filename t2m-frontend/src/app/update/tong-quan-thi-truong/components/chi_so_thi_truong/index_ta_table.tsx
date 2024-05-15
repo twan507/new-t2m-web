@@ -81,7 +81,7 @@ const TaTable = (props: any) => {
           `}
         </style>
         <div style={{ width: props?.width, margin: 0, padding: 0, height: props?.height, marginTop: props?.marginTop }}>
-          <Table className="taindex-table" columns={columns} dataSource={data_sets} pagination={false} showHeader={false} />
+          <Table className="taindex-table" columns={columns} dataSource={data_sets} pagination={false} showHeader={false} rowKey="_id" />
         </div>
       </>
     )
