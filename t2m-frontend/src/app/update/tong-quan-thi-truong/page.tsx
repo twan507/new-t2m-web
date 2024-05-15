@@ -6,7 +6,7 @@ import MarketBreathChart from "./components/chi_so_thi_truong/market_breath";
 import MarketTopStockChart from "./components/chi_so_thi_truong/market_top_stock";
 import IndexPriceChart from "./components/chi_so_thi_truong/index_price_chart";
 import './styles.css'
-import TaTable from "./components/chi_so_thi_truong/ta_table";
+import TaTable from "./components/chi_so_thi_truong/index_ta_table";
 
 const useWindowWidth = () => {
   const [windowWidth, setWindowWidth] = useState(Math.min(window.innerWidth, 1250));
