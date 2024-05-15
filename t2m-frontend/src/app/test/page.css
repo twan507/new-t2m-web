@@ -1,0 +1,29 @@
+.taindex-table {
+    width: 100%;
+    /* Điều chỉnh độ rộng của bảng */
+    height: 100%;
+    /* Điều chỉnh độ cao của bảng */
+    margin: auto;
+    /* Canh giữa bảng */
+    background-color: transparent !important;
+}
+
+.taindex-table .ant-table {
+    background-color: transparent !important;
+    border: none !important;
+}
+
+.taindex-table .ant-table-thead>tr>th {
+    background-color: transparent !important;
+    border: none !important;
+}
+
+.taindex-table .ant-table-thead>tr>th,
+.taindex-table .ant-table-tbody>tr>td {
+    background-color: transparent !important;
+    border: none !important;
+}
+
+.taindex-table .ant-table-tbody>tr:hover>td {
+    background-color: transparent !important;
+}

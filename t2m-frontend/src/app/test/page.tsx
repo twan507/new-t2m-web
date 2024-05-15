@@ -1,22 +1,64 @@
 'use client'
-import { sendRequest } from "@/utlis/api"
-import { Card, Col, Row } from "antd";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
+import { Space, Table, Tag } from 'antd';
+import type { TableProps } from 'antd';
+import './page.css'; // Import CSS file for custom styles
 
-export default function TestPage() {
-  const getData = async () => {
-    const res = await sendRequest<IBackendRes<any>>({
-      url: `${process.env.NEXT_PUBLIC_STOCK_API}/stock/v1/database`,
-      method: "GET",
-    })
-    setTableList(res.data)
-  }
+const columns: TableProps<any>['columns'] = [
+  {
+    title: '',
+    dataIndex: 'name',
+    key: 'name',
+  },
+  {
+    title: '',
+    dataIndex: 'value',
+    key: 'value',
+  },
+  {
+    title: '',
+    key: 'tags',
+    dataIndex: 'tags',
+    render: (_, { tags }) => (
+      <>
+        {tags.map((tag: any) => {
+          let color = tag.length > 5 ? 'geekblue' : 'green';
+          if (tag === 'loser') {
+            color = 'volcano';
+          }
+          return (
+            <Tag color={color} key={tag}>
+              {tag.toUpperCase()}
+            </Tag>
+          );
+        })}
+      </>
+    ),
+  },
+];
 
-  useEffect(() => {
-    getData()
-  }, [])
+const data: any = [
+  {
+    name: 'John Brown',
+    value: 32,
+    tags: ['nice'],
+    key: '1'
+  },
+  {
+    name: 'Jim Green',
+    value: 42,
+    tags: ['loser'],
+    key: '2'
+  },
+  {
+    name: 'Joe Black',
+    value: 32,
+    tags: ['cool'],
+    key: '3'
+  },
+];
 
-  const [tableList, setTableList] = useState([]);
+const TaTable: React.FC = () => {
   const [checkAuth, setCheckAuth] = useState(true);
   useEffect(() => {
     setCheckAuth(false)
@@ -24,18 +66,20 @@ export default function TestPage() {
   if (!checkAuth) {
     return (
       <>
-        <Row>
-          <Col>
-            <Row>
-              <h1>Thống kê hiệu quả hoạt động</h1>
-            </Row>
-            <Row>
-              <Col span={8} style={{ background: 'blue', height: '300px' }}>
-              </Col>
-            </Row>
-          </Col>
-        </Row >
+        <style>
+          {`
+        .taindex-table .ant-table-thead>tr>th,
+        .taindex-table .ant-table-tbody>tr>td {
+            padding: 5px;
+        }
+        `}
+        </style>
+        <div style={{ width: '300px' }}>
+          <Table className="taindex-table" columns={columns} dataSource={data} pagination={false} showHeader={false} />;
+        </div>
       </>
+
     )
   }
 }
+export default TaTable;
