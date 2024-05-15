@@ -508,7 +508,7 @@ export default function Page1() {
                             defaultValue={time_span}
                             buttonStyle="solid"
                             onChange={onChangeIndexPriceChartTimeSpan}
-                            style={{ display: 'flex', width: '100%', marginTop: '0px', height: '20px' }}
+                            style={{ display: 'flex', width: '100%', marginTop: '-5px', height: '20px' }}
                           >
                             <Radio.Button value="1M" className="custom-radio-button"
                               style={{
@@ -532,7 +532,7 @@ export default function Page1() {
                             </Radio.Button>
                           </Radio.Group>
                         )}
-                        <IndexPriceChart data={index_price_chart_df} index_name={index_name} time_span={time_span} width='100%' height={ww > 768 ? '270px' : '210px'} />
+                        <IndexPriceChart data={index_price_chart_df} index_name={index_name} time_span={time_span} width='100%' height={ww > 768 ? '270px' : '215px'} />
                       </>
                     )}
                     {chi_so_thi_truong === 'PTKT' && (
