@@ -4,37 +4,31 @@ import { Table } from 'antd';
 import type { TableProps } from 'antd';
 import '../../styles.css'; // Import CSS file for custom styles
 
-const KNTD_Table = (props: any) => {
+const NnTdBuySellTable = (props: any) => {
 
-    const data_sets = props?.data.filter((item: any) =>
-        item.stock === props?.index_name &&
-        item.id === props?.id &&
-        props?.ta_name?.includes(item.ta_name)
-    )
-        .sort((a: any, b: any) => a.order - b.order)
+    const data_sets = props?.data.filter((item: any) => item.id === props?.id)
 
     const columns: TableProps<any>['columns'] = [
         {
-            title: 'Nuóc ngoài',
-            dataIndex: 'name',
-            key: 'name',
-            width: '40%',
+            title: ' ',
+            dataIndex: 'type',
+            width: '30%',
             render: (text: string) => (
                 <span style={{
-                    color: 'white',
+                    color: '#B3B3B3',
                     fontFamily: 'Calibri, sans-serif',
-                    fontSize: props?.fontSize,
+                    fontSize: parseInt(props?.fontSize) - 1,
                     display: 'flex',
+                    fontWeight: 'bold',
                     justifyContent: 'flex-start',
                     lineHeight: props?.lineHeight
                 }}>{text}</span>
             ),
         },
         {
-            title: 'KLGD',
-            dataIndex: 'value',
-            key: 'value',
-            width: '30%',
+            title: <span style={{ display: 'flex', justifyContent: 'flex-end', fontSize: parseInt(props?.fontSize) - 1 }}> KLGD (Cổ) </span>,
+            dataIndex: `KLGD_${props?.switch_kntd}`,
+            width: '35%',
             render: (value: number) => (
                 <span style={{
                     color: value < 0 ? '#e14040' : '#24B75E',
@@ -43,14 +37,13 @@ const KNTD_Table = (props: any) => {
                     display: 'flex',
                     justifyContent: 'flex-end',
                     lineHeight: props?.lineHeight
-                }}>{value}</span>
+                }}>{Math.round(value).toLocaleString('en-US')}</span>
             ),
         },
         {
-            title: 'GTGD',
-            dataIndex: 'from',
-            key: 'from',
-            width: '30%',
+            title: <span style={{ display: 'flex', justifyContent: 'flex-end', fontSize: parseInt(props?.fontSize) - 1 }}> GTGD (Tỷ) </span>,
+            dataIndex: `GTGD_${props?.switch_kntd}`,
+            width: '35%',
             render: (value: number) => (
                 <span style={{
                     color: value < 0 ? '#e14040' : '#24B75E',
@@ -59,7 +52,7 @@ const KNTD_Table = (props: any) => {
                     display: 'flex',
                     justifyContent: 'flex-end',
                     lineHeight: props?.lineHeight // Sử dụng biến lineHeight từ props
-                }}>{value.toFixed(2)}</span>
+                }}>{Number(value?.toFixed(2)).toLocaleString('en-US')}</span>
             ),
         },
     ];
@@ -72,7 +65,7 @@ const KNTD_Table = (props: any) => {
     if (!checkAuth) {
         return (
             <>
-                <div style={{ width: props?.width, margin: 0, padding: 0, height: props?.height, marginTop: props?.marginTop }}>
+                <div style={{ width: props?.width, margin: 0, padding: '0px 10px 10px 10px', height: props?.height, background: '#161616', borderRadius: '5px' }}>
                     <Table className="custom-table" columns={columns} dataSource={data_sets} pagination={false} rowKey="_id" />
                 </div>
             </>
@@ -82,4 +75,4 @@ const KNTD_Table = (props: any) => {
     return null;
 }
 
-export default KNTD_Table;
+export default NnTdBuySellTable;

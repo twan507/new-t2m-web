@@ -11,7 +11,9 @@ import SentimentGaugeChart from "./components/trang_thai_thi_truong/sentiment_ga
 import LiquidityGaugeChart from "./components/trang_thai_thi_truong/liquidity_gauge_chart";
 import SentimentLineChart from "./components/trang_thai_thi_truong/sentiment_line_chart";
 import LiquidityLineChart from "./components/trang_thai_thi_truong/liquidity_line_chart";
-import KNTD_Table from "./components/trang_thai_thi_truong/nn_td_buy_sell_table";
+import NnTdBuySellTable from "./components/trang_thai_thi_truong/nn_td_buy_sell_table";
+import NnTdHispory from "./components/trang_thai_thi_truong/nn_td_history";
+import NdTdTopStockChart from "./components/trang_thai_thi_truong/nn_td_top_stock";
 
 const useWindowWidth = () => {
   const [windowWidth, setWindowWidth] = useState(Math.min(window.innerWidth, 1250));
@@ -37,48 +39,88 @@ export default function Page1() {
       method: "GET",
     })
     if (tableName === 'update_time') {
-      set_update_time(res.data)
+      await set_update_time(res.data)
     } else if (tableName === 'index_card_df') {
-      set_index_card_df(res.data)
+      await set_index_card_df(res.data)
     } else if (tableName === 'market_info_df') {
-      set_market_info_df(res.data)
+      await set_market_info_df(res.data)
+    } else if (tableName === 'market_top_stock') {
+      await set_market_top_stock(res.data)
     } else if (tableName === 'index_price_chart_df') {
-      set_index_price_chart_df(res.data)
+      await set_index_price_chart_df(res.data)
     } else if (tableName === 'ta_index_df') {
-      set_ta_index_df(res.data)
+      await set_ta_index_df(res.data)
     } else if (tableName === 'market_sentiment') {
-      set_market_sentiment(res.data)
+      await set_market_sentiment(res.data)
     } else if (tableName === 'itd_score_liquidity_last') {
-      set_itd_score_liquidity_last(res.data)
+      await set_itd_score_liquidity_last(res.data)
     } else if (tableName === 'itd_score_liquidity_df') {
-      set_itd_score_liquidity_df(res.data)
+      await set_itd_score_liquidity_df(res.data)
     } else if (tableName === 'nn_td_20p_df') {
-      set_nn_td_20p_df(res.data)
+      await set_nn_td_20p_df(res.data)
     } else if (tableName === 'nn_td_buy_sell_df') {
-      set_nn_td_buy_sell_df(res.data)
+      await set_nn_td_buy_sell_df(res.data)
     } else if (tableName === 'nn_td_top_stock') {
-      set_nn_td_top_stock(res.data)
+      await set_nn_td_top_stock(res.data)
     }
   }
-
   useEffect(() => {
-    getData('update_time')
-    getData('index_card_df')
-    getData('market_info_df')
-    getData('index_price_chart_df')
-    getData('ta_index_df')
-    getData('market_sentiment')
-    getData('itd_score_liquidity_last')
-    getData('itd_score_liquidity_df')
-    getData('nn_td_20p_df')
-    getData('nn_td_buy_sell_df')
-    getData('nn_td_top_stock')
-  }, [])
+    const data_variables = {
+      update_time,
+      index_card_df,
+      market_info_df,
+      market_top_stock,
+      index_price_chart_df,
+      ta_index_df,
+      market_sentiment,
+      itd_score_liquidity_last,
+      itd_score_liquidity_df,
+      nn_td_20p_df,
+      nn_td_buy_sell_df,
+      nn_td_top_stock,
+    };
+
+    const fetchData = async () => {
+      getData('update_time');
+      getData('index_card_df');
+      getData('market_info_df');
+      getData('market_top_stock');
+      getData('index_price_chart_df');
+      getData('ta_index_df');
+      getData('market_sentiment');
+      getData('itd_score_liquidity_last');
+      getData('itd_score_liquidity_df');
+      getData('nn_td_20p_df');
+      getData('nn_td_buy_sell_df');
+      getData('nn_td_top_stock');
+      console.log(new Date().toLocaleString());
+      // Hàm kiểm tra và gọi getData
+      // let isAnyEmptyArray = true;
+      // while (isAnyEmptyArray) {
+      //   isAnyEmptyArray = false;
+      //   const fetchPromises = [];
+
+      //   for (const [key, value] of Object.entries(data_variables)) {
+      //     if (Array.isArray(value) && value.length === 0) {
+      //       fetchPromises.push(getData(key));
+      //       isAnyEmptyArray = true;
+      //     }
+      //   }
+      //   await Promise.all(fetchPromises); // Chờ tất cả các lời hứa hoàn thành trước khi tiếp tục vòng lặp
+      // }
+      // console.log(new Date())
+    };
+    fetchData();
+
+    const interval = setInterval(fetchData, 60 * 1000); // Gọi lại mỗi 1 phút
+    return () => clearInterval(interval); // Xóa interval khi component unmount
+  }, []);
 
   //State lưu trữ dữ liệu cổ phiếu
   const [update_time, set_update_time] = useState<any[]>([]);
   const [index_card_df, set_index_card_df] = useState<any[]>([]);
   const [market_info_df, set_market_info_df] = useState<any[]>([]);
+  const [market_top_stock, set_market_top_stock] = useState<any[]>([]);
   const [index_price_chart_df, set_index_price_chart_df] = useState<any[]>([]);
   const [ta_index_df, set_ta_index_df] = useState<any[]>([]);
   const [market_sentiment, set_market_sentiment] = useState<any[]>([]);
@@ -88,15 +130,17 @@ export default function Page1() {
   const [nn_td_buy_sell_df, set_nn_td_buy_sell_df] = useState<any[]>([]);
   const [nn_td_top_stock, set_nn_td_top_stock] = useState<any[]>([]);
 
+
   //State lưu giữ trạng thái hiển thị của các nút bấm
   const [chi_so_thi_truong, set_chi_so_thi_truong] = useState('TQ');
   const [time_span, set_time_span] = useState('1Y');
   const [index_name, set_index_name] = useState('VNINDEX');
   const [mobile_ta_mode, set_mobile_ta_mode] = useState('month');
   const [tttt_kntd, set_tttt_kntd] = useState('TTTT');
+  const [id_kntd, set_id_kntd] = useState('HSX');
+  const [switch_kntd, set_switch_kntd] = useState('NN');
 
   const ww = useWindowWidth();
-  console.log(ww)
   const pixel = (ratio: number, min: number) => {
     return `${Math.max(ratio * ww, min).toFixed(0)}px`;
   }
@@ -119,6 +163,16 @@ export default function Page1() {
   const onChangeMobileTaMode = (e: any) => {
     const value = e.target.value;
     set_mobile_ta_mode(value)
+  };
+
+  const onChangeKntdId = (e: any) => {
+    const value = e.target.value;
+    set_id_kntd(value)
+  };
+
+  const onChangeSwitchKntd = (e: any) => {
+    const value = e.target.value;
+    set_switch_kntd(value)
   };
 
   const chi_so_thi_truong_mobile_items: any = [
@@ -530,7 +584,7 @@ export default function Page1() {
                           <MarketBreathChart data={market_info_df} width={ww > 400 ? '100%' : '200px'} height={ww > 800 ? '230px' : '180px'} ww={ww} pixel={pixel} />
                         </Col>
                         <Col xs={0} sm={0} md={12} lg={13} xl={14}>
-                          <MarketTopStockChart ww={ww} pixel={pixel} />
+                          <MarketTopStockChart data={market_top_stock} ww={ww} pixel={pixel} />
                         </Col>
                       </>
                     )}
@@ -661,7 +715,7 @@ export default function Page1() {
                   </Row>
                 </Col>
               </Row >
-              <Row style={{ marginTop: '50px', marginBottom: '10px' }}>
+              <Row gutter={10} style={{ marginTop: '50px', marginBottom: '10px' }}>
                 <Col xs={16} sm={15} md={14} lg={14} xl={14}>
                   <p style={{ color: 'white', fontSize: pixel(0.025, 18), fontFamily: 'Calibri, sans-serif', margin: 0, padding: 0, fontWeight: 'bold' }}>Trạng thái thị trường</p>
                   <p style={{ color: 'white', fontSize: pixel(0.011, 10), fontFamily: 'Calibri, sans-serif', margin: 0, padding: 0 }}>{update_time[0]?.date}</p>
@@ -753,21 +807,21 @@ export default function Page1() {
               )}
               {tttt_kntd === 'KNTD' && (
                 <>
-                  <Row>
-                    <Col xs={10} sm={10} md={6} lg={6} xl={6}>
+                  <Row gutter={10}>
+                    <Col xs={12} sm={10} md={6} lg={6} xl={6}>
                       <Radio.Group
                         className="custom-radio-group" size='small'
-                        // defaultValue={tttt_kntd}
+                        defaultValue={switch_kntd}
                         buttonStyle="solid"
-                        // onChange={onChangeTttt}
-                        style={{ display: 'flex', width: '100%', marginTop: '5px', height: '50px' }}
+                        onChange={onChangeSwitchKntd}
+                        style={{ display: 'flex', width: '100%', marginTop: '5px', height: '30px' }}
                       >
-                        <Radio.Button value="TTTT" className="custom-radio-button"
+                        <Radio.Button value="NN" className="custom-radio-button"
                           style={{
                             fontFamily: 'Calibri, sans-serif', fontSize: pixel(0.013, 12), color: '#dfdfdf'
                           }}>Khối ngoại
                         </Radio.Button>
-                        <Radio.Button value="KNTD" className="custom-radio-button"
+                        <Radio.Button value="TD" className="custom-radio-button"
                           style={{
                             fontFamily: 'Calibri, sans-serif', fontSize: pixel(0.013, 12), color: '#dfdfdf'
                           }}>Tự doanh
@@ -775,37 +829,37 @@ export default function Page1() {
                       </Radio.Group>
                       <Radio.Group
                         className="custom-radio-group" size='small'
-                        // defaultValue={tttt_kntd}
+                        defaultValue={id_kntd}
                         buttonStyle="solid"
-                        // onChange={onChangeTttt}
-                        style={{ display: 'flex', width: '100%', marginTop: '5px', height: '50px' }}
+                        onChange={onChangeKntdId}
+                        style={{ display: 'flex', width: '100%', marginTop: '5px', height: '40px' }}
                       >
-                        <Radio.Button value="TTTT" className="custom-radio-button"
+                        <Radio.Button value="HSX" className="custom-radio-button"
                           style={{
                             fontFamily: 'Calibri, sans-serif', fontSize: pixel(0.013, 12), color: '#dfdfdf'
                           }}>HSX
                         </Radio.Button>
-                        <Radio.Button value="KNTD" className="custom-radio-button"
+                        <Radio.Button value="HNX" className="custom-radio-button"
                           style={{
                             fontFamily: 'Calibri, sans-serif', fontSize: pixel(0.013, 12), color: '#dfdfdf'
                           }}>HNX
                         </Radio.Button>
-                        <Radio.Button value="KNTD" className="custom-radio-button"
+                        <Radio.Button value="UPCOM" className="custom-radio-button"
                           style={{
                             fontFamily: 'Calibri, sans-serif', fontSize: pixel(0.013, 12), color: '#dfdfdf'
                           }}>UPCOM
                         </Radio.Button>
                       </Radio.Group>
-                      <KNTD_Table data={ta_index_df} index_name={index_name} id='year' ta_name={['candle']}
-                        fontSize={pixel(0.012, 12)} lineHeight={ww > 768 ? '20px' : '15px'}
-                        width='100%' height={ww > 768 ? '70px' : '50px'} marginTop={ww > 768 ? '0px' : '0px'}
-                      />
+                      <NnTdBuySellTable data={nn_td_buy_sell_df} id={id_kntd} switch_kntd={switch_kntd}
+                        fontSize={pixel(0.013, 11)} lineHeight='23px' width='100%' height='115px' />
                     </Col>
-                    <Col xs={10} sm={10} md={6} lg={6} xl={6}>
-
+                    <Col xs={12} sm={14} md={18} lg={18} xl={18}>
+                      <NnTdHispory data={nn_td_20p_df} id={id_kntd} switch_kntd={switch_kntd} ww={ww} fontSize={pixel(0.015, 17)} />
                     </Col>
                   </Row>
-                  <Row></Row>
+                  <Row>
+                    <NdTdTopStockChart data={nn_td_top_stock} ww={ww} pixel={pixel} id={id_kntd} switch_kntd={switch_kntd} />
+                  </Row>
                 </>
               )}
 

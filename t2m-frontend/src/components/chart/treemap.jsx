@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 
-const Treemap = ({ data, ww, pixel }) => {
+const Treemap = ({ data, ww, pixel, type }) => {
     const ref = useRef();
     const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
@@ -67,7 +67,11 @@ const Treemap = ({ data, ww, pixel }) => {
             .attr('fill', 'white')
             .attr('clip-path', d => `url(#clip-${d.leafUid})`)
             .selectAll('tspan')
-            .data(d => (d.data.name + '\n' + ((d.data.change * 100)?.toFixed(2) + '%')).split('\n'))
+            .data(d =>
+                type === 'market' ?
+                    (d.data.name + '\n' + ((d.data.change * 100)?.toFixed(2) + '%')).split('\n') :
+                    (d.data.name + '\n' + ((d.data.value)?.toFixed(2) + ' Tỷ')).split('\n')
+            )
             .join('tspan')
             .attr('x', 5)
             .attr('y', (d, i) => `${i * 1.1 + 1}em`)
