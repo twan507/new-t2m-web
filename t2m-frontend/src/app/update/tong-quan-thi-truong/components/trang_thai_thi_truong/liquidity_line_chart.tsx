@@ -21,7 +21,7 @@ const LiquidityLineChart = (props: any) => {
         datasets: [
             {
                 label: 'Giá trị',
-                data: data_sets.map((item: any) => (item.liquid_all_stock * 100).toFixed(2)),
+                data: data_sets.map((item: any) => item.liquid_all_stock === null ? null : (item.liquid_all_stock * 100).toFixed(2)),
                 fill: 'start',
                 backgroundColor: 'rgba(2, 91, 196, 0.2)', // Thêm màu nền cho khu vực dưới đường biểu đồ
                 borderColor: '#025bc4',
@@ -85,7 +85,7 @@ const LiquidityLineChart = (props: any) => {
     };
 
     return (
-        <div style={{ width: props?.width, height: props?.height, marginTop: '-25px' }}>
+        <div style={{ width: props?.width, height: props?.height, marginTop: '-15px' }}>
             <Line data={lines} options={options} />
         </div>
     );

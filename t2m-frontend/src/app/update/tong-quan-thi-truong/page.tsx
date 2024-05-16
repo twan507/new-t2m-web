@@ -11,6 +11,7 @@ import SentimentGaugeChart from "./components/trang_thai_thi_truong/sentiment_ga
 import LiquidityGaugeChart from "./components/trang_thai_thi_truong/liquidity_gauge_chart";
 import SentimentLineChart from "./components/trang_thai_thi_truong/sentiment_line_chart";
 import LiquidityLineChart from "./components/trang_thai_thi_truong/liquidity_line_chart";
+import KNTD_Table from "./components/trang_thai_thi_truong/nn_td_buy_sell_table";
 
 const useWindowWidth = () => {
   const [windowWidth, setWindowWidth] = useState(Math.min(window.innerWidth, 1250));
@@ -51,6 +52,12 @@ export default function Page1() {
       set_itd_score_liquidity_last(res.data)
     } else if (tableName === 'itd_score_liquidity_df') {
       set_itd_score_liquidity_df(res.data)
+    } else if (tableName === 'nn_td_20p_df') {
+      set_nn_td_20p_df(res.data)
+    } else if (tableName === 'nn_td_buy_sell_df') {
+      set_nn_td_buy_sell_df(res.data)
+    } else if (tableName === 'nn_td_top_stock') {
+      set_nn_td_top_stock(res.data)
     }
   }
 
@@ -63,6 +70,9 @@ export default function Page1() {
     getData('market_sentiment')
     getData('itd_score_liquidity_last')
     getData('itd_score_liquidity_df')
+    getData('nn_td_20p_df')
+    getData('nn_td_buy_sell_df')
+    getData('nn_td_top_stock')
   }, [])
 
   //State lưu trữ dữ liệu cổ phiếu
@@ -74,12 +84,16 @@ export default function Page1() {
   const [market_sentiment, set_market_sentiment] = useState<any[]>([]);
   const [itd_score_liquidity_last, set_itd_score_liquidity_last] = useState<any[]>([]);
   const [itd_score_liquidity_df, set_itd_score_liquidity_df] = useState<any[]>([]);
+  const [nn_td_20p_df, set_nn_td_20p_df] = useState<any[]>([]);
+  const [nn_td_buy_sell_df, set_nn_td_buy_sell_df] = useState<any[]>([]);
+  const [nn_td_top_stock, set_nn_td_top_stock] = useState<any[]>([]);
 
   //State lưu giữ trạng thái hiển thị của các nút bấm
   const [chi_so_thi_truong, set_chi_so_thi_truong] = useState('TQ');
   const [time_span, set_time_span] = useState('1Y');
   const [index_name, set_index_name] = useState('VNINDEX');
   const [mobile_ta_mode, set_mobile_ta_mode] = useState('month');
+  const [tttt_kntd, set_tttt_kntd] = useState('TTTT');
 
   const ww = useWindowWidth();
   console.log(ww)
@@ -92,13 +106,14 @@ export default function Page1() {
     set_chi_so_thi_truong(value)
   };
 
-  const onChangeChiSoThiTruongMobile: MenuProps['onClick'] = (e) => {
-    set_chi_so_thi_truong(e.key);
-  };
-
   const onChangeIndexPriceChartTimeSpan = (e: any) => {
     const value = e.target.value;
     set_time_span(value)
+  };
+
+  const onChangeTttt = (e: any) => {
+    const value = e.target.value;
+    set_tttt_kntd(value)
   };
 
   const onChangeMobileTaMode = (e: any) => {
@@ -121,6 +136,25 @@ export default function Page1() {
     },
   ];
 
+  const onChangeChiSoThiTruongMobile: MenuProps['onClick'] = (e) => {
+    set_chi_so_thi_truong(e.key);
+  };
+
+  const tttt_mobile_items: any = [
+    {
+      key: 'TTTT',
+      label: ww > 500 ? 'Trạng thái thị truờng' : 'Trạng thái TT',
+    },
+    {
+      key: 'KNTD',
+      label: ww > 500 ? 'Khối ngoại/Tự Doanh' : 'Khối ngoại/TD',
+    },
+  ];
+
+  const onChangeTtttMobile: MenuProps['onClick'] = (e) => {
+    set_tttt_kntd(e.key);
+  };
+
   const getColorSentiment = (value: number) => {
     if (value < 20) return '#00cccc'; // Đỏ
     if (value < 40) return '#e14040'; // Cam
@@ -130,10 +164,10 @@ export default function Page1() {
   };
 
   const getColorLiquidity = (value: number) => {
-    if (value < 70) return '#00cccc'; // Đỏ
+    if (value < 60) return '#00cccc'; // Đỏ
     if (value < 90) return '#e14040'; // Cam
-    if (value < 110) return '#D0be0f'; // Vàng
-    if (value < 130) return '#24B75E'; // Xanh lá cây
+    if (value < 120) return '#D0be0f'; // Vàng
+    if (value < 150) return '#24B75E'; // Xanh lá cây
     return '#C031C7'; // Xanh đậm
   };
 
@@ -349,7 +383,7 @@ export default function Page1() {
                     </div>
                   </Button>
                 </Col>
-                <Col xs={16} sm={17} md={18} lg={19} xl={20}>
+                <Col xs={16} sm={18} md={19} lg={19} xl={20}>
                   <Row gutter={20} style={{ height: ww > 768 ? '60px' : '100px', marginBottom: '10px' }}>
                     <Col span={12} style={{ display: 'flex', flexDirection: ww > 800 ? 'row' : 'column' }}>
                       {chi_so_thi_truong === 'TQ' && (
@@ -479,7 +513,7 @@ export default function Page1() {
                         <Menu
                           theme='dark'
                           onClick={onChangeChiSoThiTruongMobile}
-                          className="centered-menu"
+                          className="cstt-menu"
                           style={{ width: '100%', background: 'black', fontFamily: 'Calibri, sans-serif', fontSize: pixel(0.013, 12), color: '#dfdfdf', height: '100px' }}
                           defaultOpenKeys={[chi_so_thi_truong]}
                           selectedKeys={[chi_so_thi_truong]}
@@ -493,7 +527,7 @@ export default function Page1() {
                     {chi_so_thi_truong === 'TQ' && (
                       <>
                         <Col xs={24} sm={24} md={12} lg={11} xl={10} style={{ display: 'flex', justifyContent: 'center', height: '240px' }}>
-                          <MarketBreathChart width={ww > 400 ? '100%' : '200px'} height={ww > 800 ? '230px' : '180px'} ww={ww} pixel={pixel} />
+                          <MarketBreathChart data={market_info_df} width={ww > 400 ? '100%' : '200px'} height={ww > 800 ? '230px' : '180px'} ww={ww} pixel={pixel} />
                         </Col>
                         <Col xs={0} sm={0} md={12} lg={13} xl={14}>
                           <MarketTopStockChart ww={ww} pixel={pixel} />
@@ -627,58 +661,153 @@ export default function Page1() {
                   </Row>
                 </Col>
               </Row >
-              <Row style={{ display: 'flex', flexDirection: 'column', marginBottom: '20px', marginTop: '50px' }}>
-                <p style={{ color: 'white', fontSize: pixel(0.025, 18), fontFamily: 'Calibri, sans-serif', margin: 0, padding: 0, fontWeight: 'bold' }}>Trạng thái thị trường</p>
-                <p style={{ color: 'white', fontSize: pixel(0.011, 10), fontFamily: 'Calibri, sans-serif', margin: 0, padding: 0 }}>{update_time[0]?.date}</p>
-              </Row>
-              <Row gutter={10}>
-                <Col xs={8} sm={7} md={5} lg={5} xl={4}>
-                  <div style={{ background: '#161616', padding: '10px', borderRadius: '5px', margin: 0, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                    <p style={{
-                      color: 'white', fontSize: pixel(0.016, 11), fontFamily: 'Calibri, sans-serif', fontWeight: 'bold', margin: 0, padding: 0, width: '100%', display: 'flex', justifyContent: 'center'
-                    }}> Trạng thái tâm lý
-                    </p>
-                    <SentimentGaugeChart data={market_sentiment} width='100%' height='150px' ww={ww} />
-                  </div>
-                  <div style={{
-                    background: getColorSentiment(market_sentiment[0]?.last_ratio),
-                    padding: '10px', borderRadius: '5px', margin: 0, display: 'flex', flexDirection: 'column', justifyContent: 'center', marginTop: '10px', height: '40px'
-                  }}>
-                    <p style={{
-                      color: 'white', fontSize: pixel(0.016, 11), fontFamily: 'Calibri, sans-serif', fontWeight: 'bold', margin: 0, padding: 0, width: '100%', display: 'flex', justifyContent: 'center'
-                    }}> {market_sentiment[0]?.last_sentiment}
-                    </p>
-                  </div>
+              <Row style={{ marginTop: '50px', marginBottom: '10px' }}>
+                <Col xs={16} sm={15} md={14} lg={14} xl={14}>
+                  <p style={{ color: 'white', fontSize: pixel(0.025, 18), fontFamily: 'Calibri, sans-serif', margin: 0, padding: 0, fontWeight: 'bold' }}>Trạng thái thị trường</p>
+                  <p style={{ color: 'white', fontSize: pixel(0.011, 10), fontFamily: 'Calibri, sans-serif', margin: 0, padding: 0 }}>{update_time[0]?.date}</p>
                 </Col>
-                <Col xs={16} sm={17} md={19} lg={19} xl={20}>
-                  <SentimentLineChart data={market_sentiment} width='100%' height='270px' />
-                </Col>
-              </Row>
-              <Row gutter={10} style={{ marginTop: '20px' }}>
-                <Col xs={8} sm={7} md={5} lg={5} xl={4}>
-                  <div style={{ background: '#161616', padding: '10px', borderRadius: '5px', margin: 0, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                    <p style={{
-                      color: 'white', fontSize: pixel(0.016, 11), fontFamily: 'Calibri, sans-serif', fontWeight: 'bold', margin: 0, padding: 0, width: '100%', display: 'flex', justifyContent: 'center'
-                    }}> Chỉ số thanh khoản
-                    </p>
-                    <LiquidityGaugeChart data={itd_score_liquidity_last} width='100%' height='150px' ww={ww} />
-                  </div>
-                  <div style={{
-                    background: getColorLiquidity(itd_score_liquidity_last.filter((item: any) => item.name === 'Thị trường')[0]?.liquidity * 100),
-                    padding: '10px', borderRadius: '5px', margin: 0, display: 'flex', flexDirection: 'column', justifyContent: 'center', marginTop: '10px', height: '40px'
-                  }}>
-                    <p style={{
-                      color: 'white', fontSize: pixel(0.016, 11), fontFamily: 'Calibri, sans-serif', fontWeight: 'bold', margin: 0, padding: 0, width: '100%', display: 'flex', justifyContent: 'center'
-                    }}> {itd_score_liquidity_last.filter((item: any) => item.name === 'Thị trường')[0]?.liquid_state}
-                    </p>
-                  </div>
-                </Col>
-                <Col xs={16} sm={17} md={19} lg={19} xl={20}>
-                  <LiquidityLineChart data={itd_score_liquidity_df} width='100%' height='270px' />
+                <Col xs={8} sm={9} md={10} lg={10} xl={10}>
+                  {ww > 768 && (
+                    <Radio.Group
+                      className="custom-radio-group"
+                      defaultValue={tttt_kntd}
+                      buttonStyle="solid"
+                      onChange={onChangeTttt}
+                      style={{ display: 'flex', width: '100%', marginTop: '5px', height: '50px' }}
+                    >
+                      <Radio.Button value="TTTT" className="custom-radio-button"
+                        style={{
+                          fontFamily: 'Calibri, sans-serif', fontSize: pixel(0.013, 12), color: '#dfdfdf'
+                        }}>Trạng thái thị trường
+                      </Radio.Button>
+                      <Radio.Button value="KNTD" className="custom-radio-button"
+                        style={{
+                          fontFamily: 'Calibri, sans-serif', fontSize: pixel(0.013, 12), color: '#dfdfdf'
+                        }}>Khối ngoại/Tự doanh
+                      </Radio.Button>
+                    </Radio.Group>
+                  )}
+                  {ww <= 768 && (
+                    <Menu
+                      theme='dark'
+                      onClick={onChangeTtttMobile}
+                      className="tttt-menu"
+                      style={{ width: '100%', background: 'black', fontFamily: 'Calibri, sans-serif', fontSize: pixel(0.013, 12), color: '#dfdfdf', height: '50px' }}
+                      defaultOpenKeys={[tttt_kntd]}
+                      selectedKeys={[tttt_kntd]}
+                      mode="vertical"
+                      items={tttt_mobile_items}
+                    />
+                  )}
                 </Col>
               </Row>
+              {tttt_kntd === 'TTTT' && (
+                <>
+                  <Row gutter={10}>
+                    <Col xs={8} sm={7} md={5} lg={5} xl={4}>
+                      <div style={{ background: '#161616', padding: '10px', borderRadius: '5px', margin: 0, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                        <p style={{
+                          color: 'white', fontSize: pixel(0.016, 11), fontFamily: 'Calibri, sans-serif', fontWeight: 'bold', margin: 0, padding: 0, width: '100%', display: 'flex', justifyContent: 'center'
+                        }}> Trạng thái tâm lý
+                        </p>
+                        <SentimentGaugeChart data={market_sentiment} width='100%' height='150px' ww={ww} />
+                      </div>
+                      <div style={{
+                        background: getColorSentiment(market_sentiment[0]?.last_ratio),
+                        padding: '10px', borderRadius: '5px', margin: 0, display: 'flex', flexDirection: 'column', justifyContent: 'center', marginTop: '10px', height: '40px'
+                      }}>
+                        <p style={{
+                          color: 'white', fontSize: pixel(0.016, 11), fontFamily: 'Calibri, sans-serif', fontWeight: 'bold', margin: 0, padding: 0, width: '100%', display: 'flex', justifyContent: 'center'
+                        }}> {market_sentiment[0]?.last_sentiment}
+                        </p>
+                      </div>
+                    </Col>
+                    <Col xs={16} sm={17} md={19} lg={19} xl={20}>
+                      <SentimentLineChart data={market_sentiment} width='100%' height='250px' />
+                    </Col>
+                  </Row>
+                  <Row gutter={10} style={{ marginTop: '20px' }}>
+                    <Col xs={8} sm={7} md={5} lg={5} xl={4}>
+                      <div style={{ background: '#161616', padding: '10px', borderRadius: '5px', margin: 0, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                        <p style={{
+                          color: 'white', fontSize: pixel(0.016, 11), fontFamily: 'Calibri, sans-serif', fontWeight: 'bold', margin: 0, padding: 0, width: '100%', display: 'flex', justifyContent: 'center'
+                        }}> Chỉ số thanh khoản
+                        </p>
+                        <LiquidityGaugeChart data={itd_score_liquidity_last} width='100%' height='150px' ww={ww} />
+                      </div>
+                      <div style={{
+                        background: getColorLiquidity(itd_score_liquidity_last.filter((item: any) => item.name === 'Thị trường')[0]?.liquidity * 100),
+                        padding: '10px', borderRadius: '5px', margin: 0, display: 'flex', flexDirection: 'column', justifyContent: 'center', marginTop: '10px', height: '40px'
+                      }}>
+                        <p style={{
+                          color: 'white', fontSize: pixel(0.016, 11), fontFamily: 'Calibri, sans-serif', fontWeight: 'bold', margin: 0, padding: 0, width: '100%', display: 'flex', justifyContent: 'center'
+                        }}> {itd_score_liquidity_last.filter((item: any) => item.name === 'Thị trường')[0]?.liquid_state}
+                        </p>
+                      </div>
+                    </Col>
+                    <Col xs={16} sm={17} md={19} lg={19} xl={20}>
+                      <LiquidityLineChart data={itd_score_liquidity_df} width='100%' height='250px' />
+                    </Col>
+                  </Row>
+                </>
+              )}
+              {tttt_kntd === 'KNTD' && (
+                <>
+                  <Row>
+                    <Col xs={10} sm={10} md={6} lg={6} xl={6}>
+                      <Radio.Group
+                        className="custom-radio-group" size='small'
+                        // defaultValue={tttt_kntd}
+                        buttonStyle="solid"
+                        // onChange={onChangeTttt}
+                        style={{ display: 'flex', width: '100%', marginTop: '5px', height: '50px' }}
+                      >
+                        <Radio.Button value="TTTT" className="custom-radio-button"
+                          style={{
+                            fontFamily: 'Calibri, sans-serif', fontSize: pixel(0.013, 12), color: '#dfdfdf'
+                          }}>Khối ngoại
+                        </Radio.Button>
+                        <Radio.Button value="KNTD" className="custom-radio-button"
+                          style={{
+                            fontFamily: 'Calibri, sans-serif', fontSize: pixel(0.013, 12), color: '#dfdfdf'
+                          }}>Tự doanh
+                        </Radio.Button>
+                      </Radio.Group>
+                      <Radio.Group
+                        className="custom-radio-group" size='small'
+                        // defaultValue={tttt_kntd}
+                        buttonStyle="solid"
+                        // onChange={onChangeTttt}
+                        style={{ display: 'flex', width: '100%', marginTop: '5px', height: '50px' }}
+                      >
+                        <Radio.Button value="TTTT" className="custom-radio-button"
+                          style={{
+                            fontFamily: 'Calibri, sans-serif', fontSize: pixel(0.013, 12), color: '#dfdfdf'
+                          }}>HSX
+                        </Radio.Button>
+                        <Radio.Button value="KNTD" className="custom-radio-button"
+                          style={{
+                            fontFamily: 'Calibri, sans-serif', fontSize: pixel(0.013, 12), color: '#dfdfdf'
+                          }}>HNX
+                        </Radio.Button>
+                        <Radio.Button value="KNTD" className="custom-radio-button"
+                          style={{
+                            fontFamily: 'Calibri, sans-serif', fontSize: pixel(0.013, 12), color: '#dfdfdf'
+                          }}>UPCOM
+                        </Radio.Button>
+                      </Radio.Group>
+                      <KNTD_Table data={ta_index_df} index_name={index_name} id='year' ta_name={['candle']}
+                        fontSize={pixel(0.012, 12)} lineHeight={ww > 768 ? '20px' : '15px'}
+                        width='100%' height={ww > 768 ? '70px' : '50px'} marginTop={ww > 768 ? '0px' : '0px'}
+                      />
+                    </Col>
+                    <Col xs={10} sm={10} md={6} lg={6} xl={6}>
 
-
+                    </Col>
+                  </Row>
+                  <Row></Row>
+                </>
+              )}
 
 
 

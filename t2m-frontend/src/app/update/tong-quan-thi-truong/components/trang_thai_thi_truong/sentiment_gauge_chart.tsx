@@ -38,7 +38,7 @@ Chart.register(drawCenterText);
 
 const SentimentGaugeChart = (props: any) => {
 
-  const value: any = (props?.data?.reduce((sum: any, item: any) => sum + item.last_ratio, 0) / props?.data.length).toFixed(2);
+  const value: any = (props?.data[0]?.last_ratio.toFixed(2));
 
   const data: any = {
     datasets: [

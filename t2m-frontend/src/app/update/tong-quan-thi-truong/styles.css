@@ -1,3 +1,4 @@
+/* -------------------------------------------------------------------------------------------------------------- */
 /* Đặt màu nền của nút radio khi không được chọn thành màu đen */
 .ant-radio-button-wrapper:not(.ant-radio-button-wrapper-checked) {
     background-color: black;
@@ -33,9 +34,9 @@
     display: flex;
 }
 
-/* CSS cho phần menu mobile */
-
-.centered-menu .ant-menu-item {
+/* -------------------------------------------------------------------------------------------------------------- */
+/* CSS cho phần menu mobile mục chỉ số thị trường */
+.cstt-menu .ant-menu-item {
     text-align: center;
     /* Căn giữa chữ */
     display: flex;
@@ -43,19 +44,30 @@
     align-items: center;
 }
 
-.centered-menu.ant-menu-horizontal {
-    display: flex;
-    justify-content: space-around;
-    /* Đảm bảo các nút trải dài hết chiều ngang */
-}
-
-.centered-menu .ant-menu-item,
-.centered-menu .ant-menu-submenu-title {
+.cstt-menu .ant-menu-item,
+.cstt-menu .ant-menu-submenu-title {
     height: 27px !important;
     line-height: 27px !important;
 }
 
+/* -------------------------------------------------------------------------------------------------------------- */
+/* CSS cho phần menu mobile mục trạng thái thì trường */
+.tttt-menu .ant-menu-item {
+    text-align: center;
+    /* Căn giữa chữ */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
+.tttt-menu .ant-menu-item,
+.tttt-menu .ant-menu-submenu-title {
+    height: 19px !important;
+    line-height: 19px !important;
+}
+
+
+/* -------------------------------------------------------------------------------------------------------------- */
 /* CSS cho bảng phân tích kĩ thuật */
 .taindex-table {
     width: 100%;
@@ -65,12 +77,6 @@
 
 .taindex-table .ant-table {
     background-color: transparent !important;
-    border: none !important;
-}
-
-.taindex-table .ant-table-thead>tr>th {
-    background-color: transparent !important;
-    border: none !important;
 }
 
 .taindex-table .ant-table-thead>tr>th,
@@ -79,6 +85,65 @@
     border: none !important;
 }
 
-.taindex-table .ant-table-tbody>tr:hover>td {
+.taindex-table .ant-table-thead>tr>th,
+.taindex-table .ant-table-tbody>tr>td {
+  padding: 0px !important;
+}
+
+/* -------------------------------------------------------------------------------------------------------------- */
+/* CSS cho các bảng khác không phải bảng phân tích kĩ thuật */
+.custom-table .ant-table {
+    width: 100%;
+    height: 100%;
+    background-color: #000000 !important;
+}
+
+.custom-table .ant-table-thead>tr>th,
+.custom-table .ant-table-tbody>tr>td {
+    color: white;
+}
+
+.custom-table .ant-table-tbody>tr:hover>td {
+    background-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+.custom-table .ant-table-thead>tr>th,
+.custom-table .ant-table-thead>tr>td {
+    background: transparent !important;
+    color: #B3B3B3 !important;
+    transition: background-color 0.3s;
+}
+
+.custom-table .ant-table-thead>tr>td:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before {
     background-color: transparent !important;
+}
+
+.custom-table .ant-table-thead>tr>th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before {
+    background-color: transparent !important;
+}
+
+.custom-table td.ant-table-column-sort {
+    background: #161616 !important;
+}
+
+.custom-table .ant-table-thead>tr>th,
+.custom-table .ant-table-tbody>tr>td {
+    background-color: transparent !important;
+    border: none !important;
+}
+
+.custom-table .ant-table-thead>tr>th:hover {
+    background-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+.custom-table .ant-table-column-sorters:hover::after {
+    display: none !important;
+}
+
+.custom-table .ant-table-tbody>tr>td {
+    padding: 0px !important;
+}
+
+.custom-table .ant-table-thead>tr>th{
+    padding: 10px 0px 5px !important;
 }

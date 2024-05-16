@@ -20,7 +20,7 @@ const SentimentLineChart = (props: any) => {
         datasets: [
             {
                 label: 'Giá trị',
-                data: data_sets.map((item: any) => parseFloat(item.ratio.toFixed(2))),
+                data: data_sets.map((item: any) => parseFloat(item.ratio?.toFixed(2))),
                 fill: true,
                 borderColor: '#999999',
                 pointRadius: 0,
@@ -120,7 +120,7 @@ const SentimentLineChart = (props: any) => {
     };
 
     return (
-        <div style={{ width: props?.width, height: props?.height, marginTop: '-25px' }}>
+        <div style={{ width: props?.width, height: props?.height, marginTop: '-15px' }}>
             <Line data={lines} options={{ ...options, plugins: { ...options.plugins, backgroundColorPlugin } }} plugins={[backgroundColorPlugin]} />
         </div>
     );

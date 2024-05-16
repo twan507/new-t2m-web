@@ -72,14 +72,6 @@ const TaTable = (props: any) => {
   if (!checkAuth) {
     return (
       <>
-        <style>
-          {`
-            .taindex-table .ant-table-thead>tr>th,
-            .taindex-table .ant-table-tbody>tr>td {
-              padding: 0px;
-            }
-          `}
-        </style>
         <div style={{ width: props?.width, margin: 0, padding: 0, height: props?.height, marginTop: props?.marginTop }}>
           <Table className="taindex-table" columns={columns} dataSource={data_sets} pagination={false} showHeader={false} rowKey="_id" />
         </div>

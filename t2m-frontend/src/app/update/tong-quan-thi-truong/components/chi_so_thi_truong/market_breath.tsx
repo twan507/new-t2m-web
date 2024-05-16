@@ -9,21 +9,6 @@ ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 
 
 const MarketBreathChart = (props: any) => {
-  const getData = async (tableName: string) => {
-    const res = await sendRequest<IBackendRes<any>>({
-      url: `${process.env.NEXT_PUBLIC_STOCK_API}/stock/v1/database/${tableName}`,
-      method: "GET",
-    })
-    if (tableName === 'market_info_df') {
-      set_market_info_df(res.data)
-    }
-  }
-
-  useEffect(() => {
-    getData('market_info_df')
-  }, [])
-
-  const [market_info_df, set_market_info_df] = useState<any[]>([]);
 
   function getColor(name: any) {
     switch (name) {
@@ -39,12 +24,12 @@ const MarketBreathChart = (props: any) => {
   }
 
   const data = {
-    labels: market_info_df.map(item => item.name),
+    labels: props?.data.map((item: any) => item.name),
     datasets: [
       {
         label: '',
-        data: market_info_df.map(item => item.count), // Giá trị value từ dữ liệu của bạn
-        backgroundColor: market_info_df.map(item => getColor(item.name)),  // Màu sắc dựa trên tên
+        data: props?.data.map((item: any) => item.count), // Giá trị value từ dữ liệu của bạn
+        backgroundColor: props?.data.map((item: any) => getColor(item.name)),  // Màu sắc dựa trên tên
         borderWidth: 0,
       },
     ],
@@ -77,7 +62,7 @@ const MarketBreathChart = (props: any) => {
       tooltip: {
         callbacks: {
           label: function (tooltipItem: any) {
-            return `Số lượng: ${tooltipItem.raw} (${((tooltipItem.raw / market_info_df.reduce((sum, item) => sum + item.count, 0)) * 100).toFixed(2) + '%'})`;
+            return `Số lượng: ${tooltipItem.raw} (${((tooltipItem.raw / props?.data.reduce((sum: any, item: any) => sum + item.count, 0)) * 100).toFixed(2) + '%'})`;
           }
         },
         displayColors: true, // Kiểm soát việc hiển thị ô màu trong tooltip

@@ -7,10 +7,10 @@ import './gauge.css';
 Chart.register(ArcElement, Tooltip, Legend);
 
 const getColor = (value: number) => {
-  if (value < 70) return '#00cccc'; // Đỏ
+  if (value < 60) return '#00cccc'; // Đỏ
   if (value < 90) return '#e14040'; // Cam
-  if (value < 110) return '#D0be0f'; // Vàng
-  if (value < 130) return '#24B75E'; // Xanh lá cây
+  if (value < 120) return '#D0be0f'; // Vàng
+  if (value < 150) return '#24B75E'; // Xanh lá cây
   return '#C031C7'; // Xanh đậm
 };
 
@@ -27,7 +27,7 @@ const drawCenterText = {
     ctx.textBaseline = 'middle';
     ctx.textAlign = 'center';
     const centerX = width / 1.95;
-    const centerY = 120 - 10000/ww;
+    const centerY = 120 - 10000 / ww;
     ctx.fillStyle = color;
     ctx.fillText(text, centerX, centerY);
     ctx.restore();
@@ -37,12 +37,12 @@ const drawCenterText = {
 Chart.register(drawCenterText);
 
 const LiquidityGaugeChart = (props: any) => {
-  const value: any = (props?.data?.filter((item: any) => item.name === 'Thị trường')[0]?.liquidity*100)?.toFixed(2);
+  const value: any = (props?.data?.filter((item: any) => item.name === 'Thị trường')[0]?.liquidity * 100)?.toFixed(2);
 
   const data: any = {
     datasets: [
       {
-        data: [value, 130 - value], // Tỷ lệ phần trăm của gauge
+        data: [value, Math.max(150 - value, 0)], // Tỷ lệ phần trăm của gauge
         backgroundColor: [getColor(value), '#dfdfdf'], // Màu sắc của gauge
         borderWidth: 0,
         cutout: '75%',

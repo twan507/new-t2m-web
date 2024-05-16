@@ -1,84 +1,70 @@
 'use client'
-import React from 'react';
-import { Doughnut } from 'react-chartjs-2';
-import { Chart, ArcElement, Tooltip, Legend, ChartData, ChartOptions } from 'chart.js';
-import './page.css';
+import React, { useEffect } from 'react';
+import { Table, Tag } from 'antd';
+import './page.css'; // Import CSS file for custom styles
 
-Chart.register(ArcElement, Tooltip, Legend);
-
-const getColor = (value: number) => {
-  if (value < 20) return '#ff0000'; // Đỏ
-  if (value < 40) return '#ffa500'; // Cam
-  if (value < 60) return '#ffff00'; // Vàng
-  if (value < 80) return '#00ff00'; // Xanh lá cây
-  return '#008000'; // Xanh đậm
-};
-
-const drawCenterText = {
-  id: 'drawCenterText',
-  beforeDraw: (chart: any) => {
-    const { width, height, ctx } = chart;
-    const text = chart.config.options?.plugins?.center?.text || '';
-    const color = chart.config.options?.plugins?.center?.color || '#000';
-    const fontStyle = 'Calibri';
-
-    ctx.save();
-    ctx.font = `bold ${Math.round((height as number) / 4)}px ${fontStyle}`;
-    ctx.textBaseline = 'middle';
-    ctx.textAlign = 'center';
-
-    const centerX = width / 1.9;
-    const centerY = height / 1.1; // Điều chỉnh vị trí Y để văn bản nằm ở cạnh dưới của biểu đồ
-    ctx.fillStyle = color;
-    ctx.fillText(text, centerX, centerY);
-    ctx.restore();
+const columns: any = [
+  {
+    title: 'Cột 1',
+    dataIndex: 'name',
+    key: 'name',
+    render: (text: string) => (
+      <span style={{
+        color: 'blue',
+        fontFamily: 'Calibri, sans-serif',
+        display: 'flex',
+        justifyContent: 'flex-start',
+      }}>{text}</span>
+    ),
   },
-};
-
-Chart.register(drawCenterText);
-
-const TaGaugeChart: React.FC<{}> = ({ }) => {
-
-  const value = 20.15
-  const data: any = {
-    datasets: [
-      {
-        data: [value, 100 - value], // Tỷ lệ phần trăm của gauge
-        backgroundColor: [getColor(value), '#e0e0e0'], // Màu sắc của gauge
-        borderWidth: 0,
-        cutout: '80%',
-        rotation: 270,
-        circumference: 180,
-        weight: 1,
-      },
-    ],
-  };
-
-  const options: any = {
-    rotation: -90,
-    circumference: 180,
-    cutout: '80%',
-    plugins: {
-      tooltip: {
-        enabled: false,
-      },
-      legend: {
-        display: false,
-      },
-      center: {
-        text: `${value}%`,
-        color: getColor(value),
-      },
+  {
+    title: 'Cột 2',
+    dataIndex: 'value',
+    key: 'value',
+    sorter: (a: any, b: any) => {
+      return a.value - b.value;
     },
-    responsive: true,
-    maintainAspectRatio: false,
-  };
+    sortDirections: ['descend', 'ascend']
+  },
+  {
+    title: 'Cột 3',
+    key: 'tags',
+    dataIndex: 'tags',
+  },
+];
+
+const data = [
+  {
+    key: '1', // Thêm trường key duy nhất
+    name: 'John Brown',
+    value: 32,
+    tags: ['nice'],
+  },
+  {
+    key: '2', // Thêm trường key duy nhất
+    name: 'Jim Green',
+    value: 42,
+    tags: ['loser'],
+  },
+  {
+    key: '3', // Thêm trường key duy nhất
+    name: 'Joe Black',
+    value: 32,
+    tags: ['cool'],
+  },
+];
+
+const TaTable: React.FC = () => {
+
+
 
   return (
-    <div className="ta-gauge-chart-container">
-      <Doughnut data={data} options={options} />
+    <div>
+      <div style={{ width: '800px', margin: '200px' }}>
+        <Table className="custom-table" columns={columns} dataSource={data} pagination={false} />
+      </div>
     </div>
   );
 };
 
-export default TaGaugeChart;
+export default TaTable;

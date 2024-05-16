@@ -31,7 +31,7 @@ const expireTransform = createTransform(
     return {
       //@ts-ignore
       ...inboundState,
-      _persistExpiresAt: Date.now() + 24 * 60 * 60 * 1000, // 4 giờ không thao tác tự động hết
+      _persistExpiresAt: Date.now() + 8 * 60 * 60 * 1000, // 24 giờ không thao tác tự động đăng xuất
     };
   },
   // transform state being rehydrated
