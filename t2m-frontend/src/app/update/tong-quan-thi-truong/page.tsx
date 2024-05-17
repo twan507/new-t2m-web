@@ -11,11 +11,16 @@ import SentimentGaugeChart from "./components/trang_thai_thi_truong/sentiment_ga
 import LiquidityGaugeChart from "./components/trang_thai_thi_truong/liquidity_gauge_chart";
 import SentimentLineChart from "./components/trang_thai_thi_truong/sentiment_line_chart";
 import LiquidityLineChart from "./components/trang_thai_thi_truong/liquidity_line_chart";
-import NnTdBuySellTable from "./components/trang_thai_thi_truong/nn_td_buy_sell_table";
-import NnTdHispory from "./components/trang_thai_thi_truong/nn_td_history";
-import NdTdTopStockChart from "./components/trang_thai_thi_truong/nn_td_top_stock";
+import NnTdBuySellTable from "./components/khoi_ngoai_tu_doanh/nn_td_buy_sell_table";
+import NnTdHispory from "./components/khoi_ngoai_tu_doanh/nn_td_history";
+import NdTdTopStockChart from "./components/khoi_ngoai_tu_doanh/nn_td_top_stock";
+import MarketWeekScoreChart from "./components/dong_tien_thanh_khoan/score_week";
+import MarketMonthScoreChart from "./components/dong_tien_thanh_khoan/score_month";
+import LiquidityLineChart20p from "./components/dong_tien_thanh_khoan/thanh_khoan_20p";
+import MarketStructureChart from "./components/cau_truc_song_và_top_cp/cau_truc_song_chart";
+import TopCoPhieuTable from "./components/cau_truc_song_và_top_cp/top_co_phieu_table";
 
-const useWindowWidth = () => {
+const useWindowWidth = (): any => {
   const [windowWidth, setWindowWidth] = useState(Math.min(window.innerWidth, 1250));
 
   useEffect(() => {
@@ -62,24 +67,17 @@ export default function Page1() {
       await set_nn_td_buy_sell_df(res.data)
     } else if (tableName === 'nn_td_top_stock') {
       await set_nn_td_top_stock(res.data)
+    } else if (tableName === 'group_score_week') {
+      await set_group_score_week(res.data)
+    } else if (tableName === 'group_score_month') {
+      await set_group_score_month(res.data)
+    } else if (tableName === 'eod_group_liquidity_df') {
+      await set_eod_group_liquidity_df(res.data)
+    } else if (tableName === 'market_ms') {
+      await set_market_ms(res.data)
     }
   }
   useEffect(() => {
-    const data_variables = {
-      update_time,
-      index_card_df,
-      market_info_df,
-      market_top_stock,
-      index_price_chart_df,
-      ta_index_df,
-      market_sentiment,
-      itd_score_liquidity_last,
-      itd_score_liquidity_df,
-      nn_td_20p_df,
-      nn_td_buy_sell_df,
-      nn_td_top_stock,
-    };
-
     const fetchData = async () => {
       getData('update_time');
       getData('index_card_df');
@@ -93,22 +91,10 @@ export default function Page1() {
       getData('nn_td_20p_df');
       getData('nn_td_buy_sell_df');
       getData('nn_td_top_stock');
-      console.log(new Date().toLocaleString());
-
-      // let isAnyEmptyArray = true;
-      // while (isAnyEmptyArray) {
-      //   isAnyEmptyArray = false;
-      //   const fetchPromises = [];
-
-      //   for (const [key, value] of Object.entries(data_variables)) {
-      //     if (Array.isArray(value) && value.length === 0) {
-      //       fetchPromises.push(getData(key));
-      //       isAnyEmptyArray = true;
-      //     }
-      //   }
-      //   await Promise.all(fetchPromises); // Chờ tất cả các lời hứa hoàn thành trước khi tiếp tục vòng lặp
-      // }
-      // console.log(new Date().toLocaleString());
+      getData('group_score_week');
+      getData('group_score_month');
+      getData('eod_group_liquidity_df');
+      getData('market_ms');
     };
     fetchData();
 
@@ -129,15 +115,20 @@ export default function Page1() {
   const [nn_td_20p_df, set_nn_td_20p_df] = useState<any[]>([]);
   const [nn_td_buy_sell_df, set_nn_td_buy_sell_df] = useState<any[]>([]);
   const [nn_td_top_stock, set_nn_td_top_stock] = useState<any[]>([]);
+  const [group_score_week, set_group_score_week] = useState<any[]>([]);
+  const [group_score_month, set_group_score_month] = useState<any[]>([]);
+  const [eod_group_liquidity_df, set_eod_group_liquidity_df] = useState<any[]>([]);
+  const [market_ms, set_market_ms] = useState<any[]>([]);
 
   //State lưu giữ trạng thái hiển thị của các nút bấm
   const [chi_so_thi_truong, set_chi_so_thi_truong] = useState('TQ');
   const [time_span, set_time_span] = useState('1Y');
   const [index_name, set_index_name] = useState('VNINDEX');
   const [mobile_ta_mode, set_mobile_ta_mode] = useState('month');
-  const [tttt_kntd, set_tttt_kntd] = useState('TTTT');
+  const [tttt_dttk, set_tttt_dttk] = useState('TTTT');
   const [id_kntd, set_id_kntd] = useState('HSX');
   const [switch_kntd, set_switch_kntd] = useState('NN');
+  const [switch_top_mobile, set_switch_top_mobile] = useState('top');
 
   const ww = useWindowWidth();
   const pixel = (ratio: number, min: number) => {
@@ -156,7 +147,7 @@ export default function Page1() {
 
   const onChangeTttt = (e: any) => {
     const value = e.target.value;
-    set_tttt_kntd(value)
+    set_tttt_dttk(value)
   };
 
   const onChangeMobileTaMode = (e: any) => {
@@ -205,23 +196,38 @@ export default function Page1() {
   ];
 
   const onChangeTtttMobile: MenuProps['onClick'] = (e) => {
-    set_tttt_kntd(e.key);
+    set_tttt_dttk(e.key);
+  };
+
+  const switch_top_mobile_items: any = [
+    {
+      key: 'top',
+      label: 'Top tiền vào',
+    },
+    {
+      key: 'bottom',
+      label: 'Top tiền ra',
+    },
+  ];
+
+  const onChangeSwitchTopMobile: MenuProps['onClick'] = (e) => {
+    set_switch_top_mobile(e.key);
   };
 
   const getColorSentiment = (value: number) => {
-    if (value < 20) return '#00cccc'; // Đỏ
-    if (value < 40) return '#e14040'; // Cam
-    if (value < 60) return '#D0be0f'; // Vàng
-    if (value < 80) return '#24B75E'; // Xanh lá cây
-    return '#C031C7'; // Xanh đậm
+    if (value < 20) return '#00cccc';
+    if (value < 40) return '#e14040';
+    if (value < 60) return '#D0be0f';
+    if (value < 80) return '#24B75E';
+    return '#C031C7';
   };
 
   const getColorLiquidity = (value: number) => {
-    if (value < 60) return '#00cccc'; // Đỏ
-    if (value < 90) return '#e14040'; // Cam
-    if (value < 120) return '#D0be0f'; // Vàng
-    if (value < 150) return '#24B75E'; // Xanh lá cây
-    return '#C031C7'; // Xanh đậm
+    if (value < 60) return '#00cccc';
+    if (value < 90) return '#e14040';
+    if (value < 120) return '#D0be0f';
+    if (value < 150) return '#24B75E';
+    return '#C031C7';
   };
 
   const [checkAuth, setCheckAuth] = useState(true);
@@ -717,7 +723,7 @@ export default function Page1() {
               <Row gutter={25} style={{ marginTop: '50px', marginBottom: '10px' }}>
                 <Col xs={16} sm={15} md={14} lg={14} xl={14}>
                   <p style={{ color: 'white', fontSize: pixel(0.025, 18), fontFamily: 'Calibri, sans-serif', margin: 0, padding: 0, fontWeight: 'bold' }}>
-                    {tttt_kntd === 'TTTT' ? 'Trạng thái thị trường' : 'Dòng tiền & Thanh khoản'}
+                    {switch_kntd === 'NN' ? 'Giao dịch nước ngoài' : 'Giao dịch tự doanh'}
                   </p>
                   <p style={{ color: 'white', fontSize: pixel(0.011, 10), fontFamily: 'Calibri, sans-serif', margin: 0, padding: 0 }}>{update_time?.[0]?.date}</p>
                 </Col>
@@ -733,7 +739,7 @@ export default function Page1() {
                       <Radio.Button value="NN" className="custom-radio-button"
                         style={{
                           fontFamily: 'Calibri, sans-serif', fontSize: pixel(0.013, 12), color: '#dfdfdf'
-                        }}>Khối ngoại
+                        }}>Nước ngoài
                       </Radio.Button>
                       <Radio.Button value="TD" className="custom-radio-button"
                         style={{
@@ -757,7 +763,7 @@ export default function Page1() {
                       <Radio.Button value="NN" className="custom-radio-button"
                         style={{
                           fontFamily: 'Calibri, sans-serif', fontSize: pixel(0.013, 12), color: '#dfdfdf'
-                        }}>Khối ngoại
+                        }}>Nước ngoài
                       </Radio.Button>
                       <Radio.Button value="TD" className="custom-radio-button"
                         style={{
@@ -800,17 +806,17 @@ export default function Page1() {
                 <NdTdTopStockChart data={nn_td_top_stock} ww={ww} pixel={pixel} id={id_kntd} switch_kntd={switch_kntd} />
               </Row>
               <Row gutter={25} style={{ marginTop: '50px', marginBottom: '10px' }}>
-                <Col xs={16} sm={15} md={14} lg={14} xl={14}>
+                <Col xs={14} sm={14} md={14} lg={14} xl={14}>
                   <p style={{ color: 'white', fontSize: pixel(0.025, 18), fontFamily: 'Calibri, sans-serif', margin: 0, padding: 0, fontWeight: 'bold' }}>
-                    {tttt_kntd === 'TTTT' ? 'Trạng thái thị trường' : 'Dòng tiền & Thanh khoản'}
+                    {tttt_dttk === 'TTTT' ? 'Trạng thái thị trường' : 'Dòng tiền & Thanh khoản'}
                   </p>
                   <p style={{ color: 'white', fontSize: pixel(0.011, 10), fontFamily: 'Calibri, sans-serif', margin: 0, padding: 0 }}>{update_time?.[0]?.date}</p>
                 </Col>
-                <Col xs={8} sm={9} md={10} lg={10} xl={10}>
+                <Col xs={10} sm={10} md={10} lg={10} xl={10}>
                   {ww > 900 && (
                     <Radio.Group
                       className="custom-radio-group"
-                      defaultValue={tttt_kntd}
+                      defaultValue={tttt_dttk}
                       buttonStyle="solid"
                       onChange={onChangeTttt}
                       style={{ display: 'flex', width: '100%', marginTop: '5px', height: '50px' }}
@@ -833,17 +839,17 @@ export default function Page1() {
                       onClick={onChangeTtttMobile}
                       className="tttt-menu"
                       style={{ width: '100%', background: 'black', fontFamily: 'Calibri, sans-serif', fontSize: pixel(0.013, 12), color: '#dfdfdf', height: '50px' }}
-                      defaultOpenKeys={[tttt_kntd]}
-                      selectedKeys={[tttt_kntd]}
+                      defaultOpenKeys={[tttt_dttk]}
+                      selectedKeys={[tttt_dttk]}
                       mode="vertical"
                       items={tttt_mobile_items}
                     />
                   )}
                 </Col>
               </Row>
-              {tttt_kntd === 'TTTT' && (
+              {tttt_dttk === 'TTTT' && (
                 <>
-                  <Row gutter={10}>
+                  <Row gutter={10} style={{ marginTop: '25px' }}>
                     <Col xs={8} sm={7} md={5} lg={5} xl={4}>
                       <div style={{ background: '#161616', padding: '10px', borderRadius: '5px', margin: 0, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                         <p style={{
@@ -891,21 +897,85 @@ export default function Page1() {
                   </Row>
                 </>
               )}
-              {tttt_kntd === 'DTTK' && (
+              {tttt_dttk === 'DTTK' && (
                 <>
-
+                  <Row gutter={10} style={{ marginTop: '20px' }}>
+                    <Col xs={12} sm={10} md={8} lg={8} xl={8}>
+                      <MarketWeekScoreChart data={group_score_week} ww={ww} fontSize={pixel(0.015, 17)} />
+                    </Col>
+                    <Col xs={12} sm={14} md={16} lg={16} xl={16}>
+                      <MarketMonthScoreChart data={group_score_month} ww={ww} fontSize={pixel(0.015, 17)} />
+                    </Col>
+                  </Row>
+                  <Row style={{ marginTop: '20px' }}>
+                    <LiquidityLineChart20p data={eod_group_liquidity_df} width='100%' height='250px' />
+                  </Row>
                 </>
               )}
-
-
-
-              <Row>
-                <div style={{ background: '#161616', padding: '10px', borderRadius: '5px', margin: 0, display: 'flex', flexDirection: 'column', justifyContent: 'center', marginTop: '10px', height: '500px' }}>
-                  <p style={{
-                    color: 'white', fontSize: pixel(0.016, 10), fontFamily: 'Calibri, sans-serif', fontWeight: 'bold', margin: 0, padding: 0, width: '100%', display: 'flex', justifyContent: 'center'
-                  }}> Trung lập
+              <Row gutter={25} style={{ marginTop: '50px', marginBottom: '10px' }}>
+                <Col>
+                  <p style={{ color: 'white', fontSize: pixel(0.025, 18), fontFamily: 'Calibri, sans-serif', margin: 0, padding: 0, fontWeight: 'bold' }}>
+                    Cấu trúc sóng thị trường
                   </p>
-                </div>
+                  <p style={{ color: 'white', fontSize: pixel(0.011, 10), fontFamily: 'Calibri, sans-serif', margin: 0, padding: 0 }}>{update_time?.[0]?.date}</p>
+                </Col>
+              </Row>
+              <Row>
+                <MarketStructureChart data={market_ms} ww={ww} fontSize={pixel(0.015, 17)} />
+              </Row>
+              <Row style={{ marginTop: '50px', marginBottom: '20px' }}>
+                <Col xs={12} sm={12} md={24} lg={24} xl={24}>
+                  <p style={{ color: 'white', fontSize: pixel(0.025, 18), fontFamily: 'Calibri, sans-serif', margin: 0, padding: 0, fontWeight: 'bold' }}>
+                    Top cổ phiếu
+                  </p>
+                  <p style={{ color: 'white', fontSize: pixel(0.011, 10), fontFamily: 'Calibri, sans-serif', margin: 0, padding: 0 }}>{update_time?.[0]?.date}</p>
+                </Col>
+                <Col xs={12} sm={12} md={0} lg={0} xl={0}>
+                  <Menu
+                    theme='dark'
+                    onClick={onChangeSwitchTopMobile}
+                    className="tttt-menu"
+                    style={{ width: '100%', background: 'black', fontFamily: 'Calibri, sans-serif', fontSize: pixel(0.013, 12), color: '#dfdfdf', height: '50px' }}
+                    defaultOpenKeys={[switch_top_mobile]}
+                    selectedKeys={[switch_top_mobile]}
+                    mode="vertical"
+                    items={switch_top_mobile_items}
+                  />
+                </Col>
+              </Row>
+              <Row gutter={10}>
+                <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+                  {switch_top_mobile === 'top' && (
+                    <div style={{ background: '#161616', padding: '10px 10px 0px 10px', borderRadius: '5px', margin: 0 }}>
+                      <p style={{
+                        fontFamily: 'Calibri, sans-serif', fontWeight: 'bold', fontSize: pixel(0.016, 15), color: 'white',
+                        marginTop: '1px', margin: 0, height: ww > 768 ? '32px' : '22px'
+                      }}>Top cổ phiếu dòng tiền vào mạnh</p>
+                      <TopCoPhieuTable data={market_top_stock} type='top' ww={ww}
+                        fontSize={pixel(0.013, 11)} lineHeight='34px' width='100%' height='375px' />
+                    </div>
+                  )}
+                  {switch_top_mobile === 'bottom' && (
+                    <div style={{ background: '#161616', padding: '10px 10px 0px 10px', borderRadius: '5px', margin: 0 }}>
+                      <p style={{
+                        fontFamily: 'Calibri, sans-serif', fontWeight: 'bold', fontSize: pixel(0.016, 15), color: 'white',
+                        marginTop: '1px', margin: 0, height: ww > 768 ? '32px' : '22px'
+                      }}>Top cổ phiếu dòng tiền ra mạnh</p>
+                      <TopCoPhieuTable data={market_top_stock} type='bottom' ww={ww}
+                        fontSize={pixel(0.013, 11)} lineHeight='34px' width='100%' height='375px' />
+                    </div>
+                  )}
+                </Col>
+                <Col xs={0} sm={0} md={12} lg={12} xl={12}>
+                  <div style={{ background: '#161616', padding: '10px 10px 0px 10px', borderRadius: '5px', margin: 0 }}>
+                    <p style={{
+                      fontFamily: 'Calibri, sans-serif', fontWeight: 'bold', fontSize: pixel(0.016, 15), color: 'white',
+                      marginTop: '1px', margin: 0, height: ww > 768 ? '32px' : '22px'
+                    }}>Top cổ phiếu dòng tiền ra mạnh</p>
+                    <TopCoPhieuTable data={market_top_stock} type='bottom' ww={ww}
+                      fontSize={pixel(0.013, 11)} lineHeight='34px' width='100%' height='375px' />
+                  </div>
+                </Col>
               </Row>
             </Col >
           </Row >
