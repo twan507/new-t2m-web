@@ -98,7 +98,7 @@ export default function Page1() {
     };
     fetchData();
 
-    const interval = setInterval(fetchData, 30 * 1000); // Gọi lại mỗi x giây
+    const interval = setInterval(fetchData, 10 * 1000); // Gọi lại mỗi x giây
     return () => clearInterval(interval); // Xóa interval khi component unmount
   }, []);
 
