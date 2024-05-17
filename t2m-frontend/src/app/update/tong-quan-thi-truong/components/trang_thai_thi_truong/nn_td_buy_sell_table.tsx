@@ -6,7 +6,7 @@ import '../../styles.css'; // Import CSS file for custom styles
 
 const NnTdBuySellTable = (props: any) => {
 
-    const data_sets = props?.data.filter((item: any) => item.id === props?.id)
+    const data_sets = props?.data?.filter((item: any) => item.id === props?.id)
 
     const columns: TableProps<any>['columns'] = [
         {
@@ -65,8 +65,8 @@ const NnTdBuySellTable = (props: any) => {
     if (!checkAuth) {
         return (
             <>
-                <div style={{ width: props?.width, margin: 0, padding: '0px 10px 10px 10px', height: props?.height, background: '#161616', borderRadius: '5px' }}>
-                    <Table className="custom-table" columns={columns} dataSource={data_sets} pagination={false} rowKey="_id" />
+                <div style={{ width: props?.width, margin: 0, padding: '0px 10px 10px 10px', height: props?.height, background: '#161616', borderRadius: '5px', marginTop: props?.marginTop }}>
+                    <Table className="custom-table" columns={columns} dataSource={data_sets} pagination={false} rowKey="index" />
                 </div>
             </>
         )

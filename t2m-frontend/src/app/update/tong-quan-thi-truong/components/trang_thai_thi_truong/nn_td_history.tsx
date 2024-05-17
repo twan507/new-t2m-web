@@ -16,7 +16,7 @@ ChartJS.register(
 
 const NnTdHispory = (props: any) => {
 
-    const data_sets = props?.data.filter((item: any) => item.id === props?.id)
+    const data_sets = props?.data?.filter((item: any) => item.id === props?.id)
         .sort((a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime())
 
     const dateList: string[] = data_sets?.map((item: any) => {
@@ -27,11 +27,11 @@ const NnTdHispory = (props: any) => {
     });
 
     const data = {
-        labels: dateList,
+        labels: dateList || [],
         datasets: [
             {
                 label: 'Giá trị',
-                data: props?.switch_kntd ==='NN' ? data_sets.map((item: any) => item.nn_value) : data_sets.map((item: any) => item.td_value),
+                data: props?.switch_kntd === 'NN' ? data_sets?.map((item: any) => item.nn_value) : data_sets?.map((item: any) => item.td_value),
                 backgroundColor: function (context: any) {
                     const value = context.dataset.data[context.dataIndex];
                     return value > 0 ? '#24B75E' : '#e14040';
@@ -89,6 +89,7 @@ const NnTdHispory = (props: any) => {
                 },
             },
             y: {
+                position: 'right',
                 grid: {
                     display: false, // Loại bỏ grid ngang
                 },

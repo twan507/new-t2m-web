@@ -27,7 +27,7 @@ const drawCenterText = {
     ctx.textBaseline = 'middle';
     ctx.textAlign = 'center';
     const centerX = width / 1.95;
-    const centerY = 120 - 10000/ww;
+    const centerY = 120 - 10000 / ww;
     ctx.fillStyle = color;
     ctx.fillText(text, centerX, centerY);
     ctx.restore();
@@ -38,7 +38,7 @@ Chart.register(drawCenterText);
 
 const SentimentGaugeChart = (props: any) => {
 
-  const value: any = (props?.data[0]?.last_ratio.toFixed(2));
+  const value: any = (props?.data?.[0]?.last_ratio.toFixed(2));
 
   const data: any = {
     datasets: [

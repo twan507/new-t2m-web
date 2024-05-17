@@ -7,12 +7,12 @@ const MarketTopStockChart = (props: any) => {
 
     let top_data = {
         name: "root",
-        children: props?.data.filter((item: any) => item.t0_score > 0).map((item: any) => ({ name: item.stock, value: item.t0_score, change: item.price_change }))
+        children: props?.data?.filter((item: any) => item.t0_score > 0).map((item: any) => ({ name: item.stock, value: item.t0_score, change: item.price_change }))
     };
 
     let bottom_data = {
         name: "root",
-        children: props?.data.filter((item: any) => item.t0_score < 0).map((item: any) => ({ name: item.stock, value: item.t0_score, change: item.price_change }))
+        children: props?.data?.filter((item: any) => item.t0_score < 0).map((item: any) => ({ name: item.stock, value: item.t0_score, change: item.price_change }))
     };
 
     const [checkAuth, setCheckAuth] = useState(true);

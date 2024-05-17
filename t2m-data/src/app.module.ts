@@ -1,27 +1,24 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { MongooseModule } from '@nestjs/mongoose';
-import { softDeletePlugin } from 'soft-delete-plugin-mongoose';
-import { ScheduleModule } from '@nestjs/schedule';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { DatabaseModule } from './database/database.module';
-require('dotenv').config()
 
 @Module({
-  imports: [
-    ScheduleModule.forRoot(),
-    MongooseModule.forRootAsync({
-      useFactory: async () => ({
-        uri: process.env.MONGODB_URL,
-        connectionFactory: (connection) => {
-          connection.plugin(softDeletePlugin);
-          return connection;
-        }
-      })
+  imports: [DatabaseModule,
+    TypeOrmModule.forRoot({
+      type: 'mysql',
+      host: '14.225.192.30',
+      port: 3306,
+      username: 'twan',
+      password: 'chodom',
+      database: 't2m',
+      extra: {
+        connectionLimit: 10,
+      },
+      // Thiết lập múi giờ cho kết nối
+      timezone: 'Z',
+      entities: [__dirname + '/../**/*.entity{.ts,.js}'],
+      synchronize: true,
     }),
-    DatabaseModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

@@ -1,23 +1,18 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectConnection } from '@nestjs/mongoose';
-import { Connection } from 'mongoose';
+import { Injectable } from '@nestjs/common';
+import { DataSource } from 'typeorm';
 
 @Injectable()
 export class DatabaseService {
-    constructor(
-        @InjectConnection() private readonly dbConnection: Connection
-    ) { }
+  constructor(private readonly dataSource: DataSource) {}
 
-    async findCollectionsList() {
-        const collections = await this.dbConnection.db.listCollections().toArray();
-        return collections.map(collection => collection.name);
-    }
+  async findAllTables(): Promise<string[]> {
+    const query = `SHOW TABLES`;
+    const result = await this.dataSource.query(query);
+    return result.map((row: any) => Object.values(row)[0]);
+  }
 
-    async findAllInCollection(collectionName: string) {
-        const collection = this.dbConnection.collection(collectionName);
-        if (!collection) {
-            throw new NotFoundException(`Collection '${collectionName}' not found`);
-        }
-        return await collection.find().toArray();
-    }
+  async findTableData(tableName: string): Promise<any[]> {
+    const query = `SELECT * FROM ${tableName}`;
+    return this.dataSource.query(query);
+  }
 }

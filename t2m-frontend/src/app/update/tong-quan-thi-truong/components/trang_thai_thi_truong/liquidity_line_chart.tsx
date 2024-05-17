@@ -7,9 +7,9 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, T
 
 const LiquidityLineChart = (props: any) => {
 
-    const data_sets = props?.data.sort((a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    const data_sets = props?.data?.sort((a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
-    const timeList: string[] = data_sets.map((item: any) => {
+    const timeList: string[] = data_sets?.map((item: any) => {
         const date = new Date(item.date);
         const utcHours = ('0' + date.getUTCHours()).slice(-2); // Lấy giờ UTC và thêm số 0 nếu cần
         const utcMinutes = ('0' + date.getUTCMinutes()).slice(-2); // Lấy phút UTC và thêm số 0 nếu cần
@@ -17,11 +17,11 @@ const LiquidityLineChart = (props: any) => {
     });
 
     const lines = {
-        labels: timeList,
+        labels: timeList || [],
         datasets: [
             {
                 label: 'Giá trị',
-                data: data_sets.map((item: any) => item.liquid_all_stock === null ? null : (item.liquid_all_stock * 100).toFixed(2)),
+                data: data_sets?.map((item: any) => item.liquid_all_stock === null ? null : (item.liquid_all_stock * 100).toFixed(2)),
                 fill: 'start',
                 backgroundColor: 'rgba(2, 91, 196, 0.2)', // Thêm màu nền cho khu vực dưới đường biểu đồ
                 borderColor: '#025bc4',
@@ -73,10 +73,11 @@ const LiquidityLineChart = (props: any) => {
                 },
             },
             y: {
+                position: 'right',
                 ticks: {
                     stepSize: 20,
                     color: '#dfdfdf', // Màu của các nhãn trên trục Y
-                    callback: function(value: number) {
+                    callback: function (value: number) {
                         return `${value}%`; // Hiển thị dạng phần trăm
                     }
                 },

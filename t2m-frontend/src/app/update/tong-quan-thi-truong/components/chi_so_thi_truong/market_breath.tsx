@@ -24,12 +24,12 @@ const MarketBreathChart = (props: any) => {
   }
 
   const data = {
-    labels: props?.data.map((item: any) => item.name),
+    labels: props?.data?.map((item: any) => item.name) || [],
     datasets: [
       {
         label: '',
-        data: props?.data.map((item: any) => item.count), // Giá trị value từ dữ liệu của bạn
-        backgroundColor: props?.data.map((item: any) => getColor(item.name)),  // Màu sắc dựa trên tên
+        data: props?.data?.map((item: any) => item.count), // Giá trị value từ dữ liệu của bạn
+        backgroundColor: props?.data?.map((item: any) => getColor(item.name)),  // Màu sắc dựa trên tên
         borderWidth: 0,
       },
     ],
@@ -43,7 +43,7 @@ const MarketBreathChart = (props: any) => {
         font: {
           family: 'Calibri',
           weight: 'bold',
-          size:  props?.pixel(0.012, 11)
+          size: props?.pixel(0.012, 11)
         },
         textAlign: 'center',
         align: 'end',
@@ -62,7 +62,7 @@ const MarketBreathChart = (props: any) => {
       tooltip: {
         callbacks: {
           label: function (tooltipItem: any) {
-            return `Số lượng: ${tooltipItem.raw} (${((tooltipItem.raw / props?.data.reduce((sum: any, item: any) => sum + item.count, 0)) * 100).toFixed(2) + '%'})`;
+            return `Số lượng: ${tooltipItem.raw} (${((tooltipItem.raw / props?.data?.reduce((sum: any, item: any) => sum + item.count, 0)) * 100).toFixed(2) + '%'})`;
           }
         },
         displayColors: true, // Kiểm soát việc hiển thị ô màu trong tooltip

@@ -6,9 +6,9 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, ChartDataLabels);
 
 const SentimentLineChart = (props: any) => {
-    const data_sets = props?.data.sort((a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    const data_sets = props?.data?.sort((a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
-    const timeList: string[] = data_sets.map((item: any) => {
+    const timeList: string[] = data_sets?.map((item: any) => {
         const date = new Date(item.date);
         const utcHours = ('0' + date.getUTCHours()).slice(-2);
         const utcMinutes = ('0' + date.getUTCMinutes()).slice(-2);
@@ -16,11 +16,11 @@ const SentimentLineChart = (props: any) => {
     });
 
     const lines = {
-        labels: timeList,
+        labels: timeList || [],
         datasets: [
             {
                 label: 'Giá trị',
-                data: data_sets.map((item: any) => parseFloat(item.ratio?.toFixed(2))),
+                data: data_sets?.map((item: any) => parseFloat(item.ratio?.toFixed(2))),
                 fill: true,
                 borderColor: '#999999',
                 pointRadius: 0,
@@ -83,6 +83,7 @@ const SentimentLineChart = (props: any) => {
                 }
             },
             y: {
+                position: 'right',
                 min: 0,
                 max: 100,
                 ticks: {

@@ -6,7 +6,7 @@ import '../../styles.css'; // Import CSS file for custom styles
 
 const TaTable = (props: any) => {
 
-  const data_sets = props?.data.filter((item: any) =>
+  const data_sets = props?.data?.filter((item: any) =>
     item.stock === props?.index_name &&
     item.id === props?.id &&
     props?.ta_name?.includes(item.ta_name)
@@ -18,7 +18,7 @@ const TaTable = (props: any) => {
       title: '',
       dataIndex: 'name',
       key: 'name',
-      width: '40%', 
+      width: '40%',
       render: (text: string) => (
         <span style={{
           color: 'white',
@@ -34,7 +34,7 @@ const TaTable = (props: any) => {
       title: '',
       dataIndex: 'value',
       key: 'value',
-      width: '30%', 
+      width: '30%',
       render: (value: number) => (
         <span style={{
           color: value < 0 ? '#e14040' : '#24B75E',
@@ -42,7 +42,7 @@ const TaTable = (props: any) => {
           fontSize: props?.fontSize,
           display: 'flex',
           justifyContent: 'flex-end',
-          lineHeight: props?.lineHeight 
+          lineHeight: props?.lineHeight
         }}>{value}</span>
       ),
     },
@@ -73,7 +73,7 @@ const TaTable = (props: any) => {
     return (
       <>
         <div style={{ width: props?.width, margin: 0, padding: 0, height: props?.height, marginTop: props?.marginTop }}>
-          <Table className="taindex-table" columns={columns} dataSource={data_sets} pagination={false} showHeader={false} rowKey="_id" />
+          <Table className="taindex-table" columns={columns} dataSource={data_sets} pagination={false} showHeader={false} rowKey="index" />
         </div>
       </>
     )

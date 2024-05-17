@@ -7,10 +7,10 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, T
 
 const IndexPriceChart = (props: any) => {
 
-	const data_sets = props?.data.filter((item: any) => item.index_name === props?.index_name && item.time_span === props?.time_span)
+	const data_sets = props?.data?.filter((item: any) => item.index_name === props?.index_name && item.time_span === props?.time_span)
 		.sort((a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime())
 
-	const dateList: string[] = data_sets.map((item: any) => {
+	const dateList: string[] = data_sets?.map((item: any) => {
 		const date = new Date(item.date);
 		const month = ('0' + (date.getMonth() + 1)).slice(-2); // Lấy tháng và thêm số 0 nếu cần
 		const day = ('0' + date.getDate()).slice(-2); // Lấy ngày và thêm số 0 nếu cần
@@ -18,11 +18,11 @@ const IndexPriceChart = (props: any) => {
 	});
 
 	const lines = {
-		labels: dateList,
+		labels: dateList || [],
 		datasets: [
 			{
 				label: 'Giá trị',
-				data: data_sets.map((item: any) => item.value),
+				data: data_sets?.map((item: any) => item.value),
 				fill: true,
 				borderColor: '#C031C7',
 				pointRadius: 0, // Tắt các chấm màu xám ở các data label
@@ -73,6 +73,7 @@ const IndexPriceChart = (props: any) => {
 				},
 			},
 			y: {
+				position: 'right',
 				ticks: {
 					color: '#dfdfdf', // Màu của các nhãn trên trục Y
 				},

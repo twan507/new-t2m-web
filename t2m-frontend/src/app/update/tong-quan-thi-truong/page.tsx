@@ -94,7 +94,7 @@ export default function Page1() {
       getData('nn_td_buy_sell_df');
       getData('nn_td_top_stock');
       console.log(new Date().toLocaleString());
-      // Hàm kiểm tra và gọi getData
+
       // let isAnyEmptyArray = true;
       // while (isAnyEmptyArray) {
       //   isAnyEmptyArray = false;
@@ -108,11 +108,11 @@ export default function Page1() {
       //   }
       //   await Promise.all(fetchPromises); // Chờ tất cả các lời hứa hoàn thành trước khi tiếp tục vòng lặp
       // }
-      // console.log(new Date())
+      // console.log(new Date().toLocaleString());
     };
     fetchData();
 
-    const interval = setInterval(fetchData, 60 * 1000); // Gọi lại mỗi 1 phút
+    const interval = setInterval(fetchData, 30 * 1000); // Gọi lại mỗi x giây
     return () => clearInterval(interval); // Xóa interval khi component unmount
   }, []);
 
@@ -129,7 +129,6 @@ export default function Page1() {
   const [nn_td_20p_df, set_nn_td_20p_df] = useState<any[]>([]);
   const [nn_td_buy_sell_df, set_nn_td_buy_sell_df] = useState<any[]>([]);
   const [nn_td_top_stock, set_nn_td_top_stock] = useState<any[]>([]);
-
 
   //State lưu giữ trạng thái hiển thị của các nút bấm
   const [chi_so_thi_truong, set_chi_so_thi_truong] = useState('TQ');
@@ -200,8 +199,8 @@ export default function Page1() {
       label: ww > 500 ? 'Trạng thái thị truờng' : 'Trạng thái TT',
     },
     {
-      key: 'KNTD',
-      label: ww > 500 ? 'Khối ngoại/Tự Doanh' : 'Khối ngoại/TD',
+      key: 'DTTK',
+      label: ww > 500 ? 'Dòng tiền & Thanh khoản' : 'DT & TK',
     },
   ];
 
@@ -242,7 +241,7 @@ export default function Page1() {
             <Col style={{ width: ww, margin: 0.03 * ww }}>
               <Row style={{ display: 'flex', flexDirection: 'column', marginBottom: '20px' }}>
                 <p style={{ color: 'white', fontSize: pixel(0.025, 18), fontFamily: 'Calibri, sans-serif', margin: 0, padding: 0, fontWeight: 'bold' }}>Chỉ số thị trường</p>
-                <p style={{ color: 'white', fontSize: pixel(0.011, 10), fontFamily: 'Calibri, sans-serif', margin: 0, padding: 0 }}>{update_time[0]?.date}</p>
+                <p style={{ color: 'white', fontSize: pixel(0.011, 10), fontFamily: 'Calibri, sans-serif', margin: 0, padding: 0 }}>{update_time?.[0]?.date}</p>
               </Row>
               <Row gutter={10}>
                 <Col xs={8} sm={6} md={5} lg={5} xl={4}>
@@ -255,32 +254,32 @@ export default function Page1() {
                       height: '28px', color: 'white', fontSize: pixel(0.015, 14), fontFamily: 'Calibri, sans-serif', fontWeight: 'bold',
                       margin: `1px 0px 0px ${pixel(0.01, 0)}`, display: 'flex', alignItems: 'center'
                     }}>
-                      {index_card_df.filter(item => item.stock === 'VNINDEX')[0]?.stock}
+                      {index_card_df?.filter(item => item.stock === 'VNINDEX')[0]?.stock}
                     </p>
                     <div style={{ height: '24px', display: 'flex', margin: 0, padding: 0, alignItems: 'center' }}>
                       <p style={{
                         color: 'white', fontSize: pixel(0.012, 10), fontFamily: 'Calibri, sans-serif', fontWeight: 'bold',
                         margin: `0px 0px 0px ${pixel(0.01, 0)}`
                       }}>
-                        {index_card_df.filter(item => item.stock === 'VNINDEX')[0]?.close.toFixed(2)}
+                        {index_card_df?.filter(item => item.stock === 'VNINDEX')[0]?.close.toFixed(2)}
                       </p>
                       <p style={{
                         fontSize: pixel(0.012, 10), fontFamily: 'Calibri, sans-serif',
                         fontWeight: 'bold', margin: `0px 0px 0px ${pixel(0.01, 2)}`, padding: 0,
-                        color: (index_card_df.filter(item => item.stock === 'VNINDEX')[0]?.change_percent) > 0.0001 ? '#24B75E' :
-                          ((index_card_df.filter(item => item.stock === 'VNINDEX')[0]?.change_percent) >= -0.001 &&
-                            (index_card_df.filter(item => item.stock === 'VNINDEX')[0]?.change_percent) <= 0.001 ? '#D0be0f' : '#e14040')
+                        color: (index_card_df?.filter(item => item.stock === 'VNINDEX')[0]?.change_percent) > 0.0001 ? '#24B75E' :
+                          ((index_card_df?.filter(item => item.stock === 'VNINDEX')[0]?.change_percent) >= -0.001 &&
+                            (index_card_df?.filter(item => item.stock === 'VNINDEX')[0]?.change_percent) <= 0.001 ? '#D0be0f' : '#e14040')
                       }}>
-                        {index_card_df.filter(item => item.stock === 'VNINDEX')[0]?.change_value.toFixed(2)}
+                        {index_card_df?.filter(item => item.stock === 'VNINDEX')[0]?.change_value.toFixed(2)}
                       </p>
                       <p style={{
                         fontSize: pixel(0.012, 10), fontFamily: 'Calibri, sans-serif', color: 'white',
                         fontWeight: 'bold', margin: `0px 0px 0px ${pixel(0.01, 2)}`, padding: '0px 3px 0px 3px', borderRadius: '5px',
-                        background: (index_card_df.filter(item => item.stock === 'VNINDEX')[0]?.change_percent) > 0.0001 ? '#24B75E' :
-                          ((index_card_df.filter(item => item.stock === 'VNINDEX')[0]?.change_percent) >= -0.001 &&
-                            (index_card_df.filter(item => item.stock === 'VNINDEX')[0]?.change_percent) <= 0.001 ? '#D0be0f' : '#e14040')
+                        background: (index_card_df?.filter(item => item.stock === 'VNINDEX')[0]?.change_percent) > 0.0001 ? '#24B75E' :
+                          ((index_card_df?.filter(item => item.stock === 'VNINDEX')[0]?.change_percent) >= -0.001 &&
+                            (index_card_df?.filter(item => item.stock === 'VNINDEX')[0]?.change_percent) <= 0.001 ? '#D0be0f' : '#e14040')
                       }}>
-                        {((index_card_df.filter(item => item.stock === 'VNINDEX')[0]?.change_percent) * 100).toFixed(2)}%
+                        {((index_card_df?.filter(item => item.stock === 'VNINDEX')[0]?.change_percent) * 100).toFixed(2)}%
                       </p>
                     </div>
                   </Button>
@@ -293,32 +292,32 @@ export default function Page1() {
                       height: '28px', color: 'white', fontSize: pixel(0.015, 14), fontFamily: 'Calibri, sans-serif', fontWeight: 'bold',
                       margin: `1px 0px 0px ${pixel(0.01, 0)}`, display: 'flex', alignItems: 'center'
                     }}>
-                      {index_card_df.filter(item => item.stock === 'VN30')[0]?.stock}
+                      {index_card_df?.filter(item => item.stock === 'VN30')[0]?.stock}
                     </p>
                     <div style={{ height: '24px', display: 'flex', margin: 0, padding: 0, alignItems: 'center' }}>
                       <p style={{
                         color: 'white', fontSize: pixel(0.012, 10), fontFamily: 'Calibri, sans-serif', fontWeight: 'bold',
                         margin: `0px 0px 0px ${pixel(0.01, 0)}`
                       }}>
-                        {index_card_df.filter(item => item.stock === 'VN30')[0]?.close.toFixed(2)}
+                        {index_card_df?.filter(item => item.stock === 'VN30')[0]?.close.toFixed(2)}
                       </p>
                       <p style={{
                         fontSize: pixel(0.012, 10), fontFamily: 'Calibri, sans-serif',
                         fontWeight: 'bold', margin: `0px 0px 0px ${pixel(0.01, 2)}`, padding: 0,
-                        color: (index_card_df.filter(item => item.stock === 'VN30')[0]?.change_percent) > 0.0001 ? '#24B75E' :
-                          ((index_card_df.filter(item => item.stock === 'VN30')[0]?.change_percent) >= -0.001 &&
-                            (index_card_df.filter(item => item.stock === 'VN30')[0]?.change_percent) <= 0.001 ? '#D0be0f' : '#e14040')
+                        color: (index_card_df?.filter(item => item.stock === 'VN30')[0]?.change_percent) > 0.0001 ? '#24B75E' :
+                          ((index_card_df?.filter(item => item.stock === 'VN30')[0]?.change_percent) >= -0.001 &&
+                            (index_card_df?.filter(item => item.stock === 'VN30')[0]?.change_percent) <= 0.001 ? '#D0be0f' : '#e14040')
                       }}>
-                        {index_card_df.filter(item => item.stock === 'VN30')[0]?.change_value.toFixed(2)}
+                        {index_card_df?.filter(item => item.stock === 'VN30')[0]?.change_value.toFixed(2)}
                       </p>
                       <p style={{
                         fontSize: pixel(0.012, 10), fontFamily: 'Calibri, sans-serif', color: 'white',
                         fontWeight: 'bold', margin: `0px 0px 0px ${pixel(0.01, 2)}`, padding: '0px 3px 0px 3px', borderRadius: '5px',
-                        background: (index_card_df.filter(item => item.stock === 'VN30')[0]?.change_percent) > 0.0001 ? '#24B75E' :
-                          ((index_card_df.filter(item => item.stock === 'VN30')[0]?.change_percent) >= -0.001 &&
-                            (index_card_df.filter(item => item.stock === 'VN30')[0]?.change_percent) <= 0.001 ? '#D0be0f' : '#e14040')
+                        background: (index_card_df?.filter(item => item.stock === 'VN30')[0]?.change_percent) > 0.0001 ? '#24B75E' :
+                          ((index_card_df?.filter(item => item.stock === 'VN30')[0]?.change_percent) >= -0.001 &&
+                            (index_card_df?.filter(item => item.stock === 'VN30')[0]?.change_percent) <= 0.001 ? '#D0be0f' : '#e14040')
                       }}>
-                        {((index_card_df.filter(item => item.stock === 'VNINDEX')[0]?.change_percent) * 100).toFixed(2)}%
+                        {((index_card_df?.filter(item => item.stock === 'VNINDEX')[0]?.change_percent) * 100).toFixed(2)}%
                       </p>
                     </div>
                   </Button>
@@ -331,32 +330,32 @@ export default function Page1() {
                       height: '28px', color: 'white', fontSize: pixel(0.015, 14), fontFamily: 'Calibri, sans-serif', fontWeight: 'bold',
                       margin: `1px 0px 0px ${pixel(0.01, 0)}`, display: 'flex', alignItems: 'center'
                     }}>
-                      {index_card_df.filter(item => item.stock === 'HNXINDEX')[0]?.stock}
+                      {index_card_df?.filter(item => item.stock === 'HNXINDEX')[0]?.stock}
                     </p>
                     <div style={{ height: '24px', display: 'flex', margin: 0, padding: 0, alignItems: 'center' }}>
                       <p style={{
                         color: 'white', fontSize: pixel(0.012, 10), fontFamily: 'Calibri, sans-serif', fontWeight: 'bold',
                         margin: `0px 0px 0px ${pixel(0.01, 0)}`
                       }}>
-                        {index_card_df.filter(item => item.stock === 'HNXINDEX')[0]?.close.toFixed(2)}
+                        {index_card_df?.filter(item => item.stock === 'HNXINDEX')[0]?.close.toFixed(2)}
                       </p>
                       <p style={{
                         fontSize: pixel(0.012, 10), fontFamily: 'Calibri, sans-serif',
                         fontWeight: 'bold', margin: `0px 0px 0px ${pixel(0.01, 2)}`, padding: 0,
-                        color: (index_card_df.filter(item => item.stock === 'HNXINDEX')[0]?.change_percent) > 0.0001 ? '#24B75E' :
-                          ((index_card_df.filter(item => item.stock === 'HNXINDEX')[0]?.change_percent) >= -0.001 &&
-                            (index_card_df.filter(item => item.stock === 'HNXINDEX')[0]?.change_percent) <= 0.001 ? '#D0be0f' : '#e14040')
+                        color: (index_card_df?.filter(item => item.stock === 'HNXINDEX')[0]?.change_percent) > 0.0001 ? '#24B75E' :
+                          ((index_card_df?.filter(item => item.stock === 'HNXINDEX')[0]?.change_percent) >= -0.001 &&
+                            (index_card_df?.filter(item => item.stock === 'HNXINDEX')[0]?.change_percent) <= 0.001 ? '#D0be0f' : '#e14040')
                       }}>
-                        {index_card_df.filter(item => item.stock === 'HNXINDEX')[0]?.change_value.toFixed(2)}
+                        {index_card_df?.filter(item => item.stock === 'HNXINDEX')[0]?.change_value.toFixed(2)}
                       </p>
                       <p style={{
                         fontSize: pixel(0.012, 10), fontFamily: 'Calibri, sans-serif', color: 'white',
                         fontWeight: 'bold', margin: `0px 0px 0px ${pixel(0.01, 2)}`, padding: '0px 3px 0px 3px', borderRadius: '5px',
-                        background: (index_card_df.filter(item => item.stock === 'HNXINDEX')[0]?.change_percent) > 0.0001 ? '#24B75E' :
-                          ((index_card_df.filter(item => item.stock === 'HNXINDEX')[0]?.change_percent) >= -0.001 &&
-                            (index_card_df.filter(item => item.stock === 'HNXINDEX')[0]?.change_percent) <= 0.001 ? '#D0be0f' : '#e14040')
+                        background: (index_card_df?.filter(item => item.stock === 'HNXINDEX')[0]?.change_percent) > 0.0001 ? '#24B75E' :
+                          ((index_card_df?.filter(item => item.stock === 'HNXINDEX')[0]?.change_percent) >= -0.001 &&
+                            (index_card_df?.filter(item => item.stock === 'HNXINDEX')[0]?.change_percent) <= 0.001 ? '#D0be0f' : '#e14040')
                       }}>
-                        {((index_card_df.filter(item => item.stock === 'HNXINDEX')[0]?.change_percent) * 100).toFixed(2)}%
+                        {((index_card_df?.filter(item => item.stock === 'HNXINDEX')[0]?.change_percent) * 100).toFixed(2)}%
                       </p>
                     </div>
                   </Button>
@@ -369,32 +368,32 @@ export default function Page1() {
                       height: '28px', color: 'white', fontSize: pixel(0.015, 14), fontFamily: 'Calibri, sans-serif', fontWeight: 'bold',
                       margin: `1px 0px 0px ${pixel(0.01, 0)}`, display: 'flex', alignItems: 'center'
                     }}>
-                      {index_card_df.filter(item => item.stock === 'UPINDEX')[0]?.stock}
+                      {index_card_df?.filter(item => item.stock === 'UPINDEX')[0]?.stock}
                     </p>
                     <div style={{ height: '24px', display: 'flex', margin: 0, padding: 0, alignItems: 'center' }}>
                       <p style={{
                         color: 'white', fontSize: pixel(0.012, 10), fontFamily: 'Calibri, sans-serif', fontWeight: 'bold',
                         margin: `0px 0px 0px ${pixel(0.01, 0)}`
                       }}>
-                        {index_card_df.filter(item => item.stock === 'UPINDEX')[0]?.close.toFixed(2)}
+                        {index_card_df?.filter(item => item.stock === 'UPINDEX')[0]?.close.toFixed(2)}
                       </p>
                       <p style={{
                         fontSize: pixel(0.012, 10), fontFamily: 'Calibri, sans-serif',
                         fontWeight: 'bold', margin: `0px 0px 0px ${pixel(0.01, 2)}`, padding: 0,
-                        color: (index_card_df.filter(item => item.stock === 'UPINDEX')[0]?.change_percent) > 0.0001 ? '#24B75E' :
-                          ((index_card_df.filter(item => item.stock === 'UPINDEX')[0]?.change_percent) >= -0.001 &&
-                            (index_card_df.filter(item => item.stock === 'UPINDEX')[0]?.change_percent) <= 0.001 ? '#D0be0f' : '#e14040')
+                        color: (index_card_df?.filter(item => item.stock === 'UPINDEX')[0]?.change_percent) > 0.0001 ? '#24B75E' :
+                          ((index_card_df?.filter(item => item.stock === 'UPINDEX')[0]?.change_percent) >= -0.001 &&
+                            (index_card_df?.filter(item => item.stock === 'UPINDEX')[0]?.change_percent) <= 0.001 ? '#D0be0f' : '#e14040')
                       }}>
-                        {index_card_df.filter(item => item.stock === 'UPINDEX')[0]?.change_value.toFixed(2)}
+                        {index_card_df?.filter(item => item.stock === 'UPINDEX')[0]?.change_value.toFixed(2)}
                       </p>
                       <p style={{
                         fontSize: pixel(0.012, 10), fontFamily: 'Calibri, sans-serif', color: 'white',
                         fontWeight: 'bold', margin: `0px 0px 0px ${pixel(0.01, 2)}`, padding: '0px 3px 0px 3px', borderRadius: '5px',
-                        background: (index_card_df.filter(item => item.stock === 'UPINDEX')[0]?.change_percent) > 0.0001 ? '#24B75E' :
-                          ((index_card_df.filter(item => item.stock === 'UPINDEX')[0]?.change_percent) >= -0.001 &&
-                            (index_card_df.filter(item => item.stock === 'UPINDEX')[0]?.change_percent) <= 0.001 ? '#D0be0f' : '#e14040')
+                        background: (index_card_df?.filter(item => item.stock === 'UPINDEX')[0]?.change_percent) > 0.0001 ? '#24B75E' :
+                          ((index_card_df?.filter(item => item.stock === 'UPINDEX')[0]?.change_percent) >= -0.001 &&
+                            (index_card_df?.filter(item => item.stock === 'UPINDEX')[0]?.change_percent) <= 0.001 ? '#D0be0f' : '#e14040')
                       }}>
-                        {((index_card_df.filter(item => item.stock === 'UPINDEX')[0]?.change_percent) * 100).toFixed(2)}%
+                        {((index_card_df?.filter(item => item.stock === 'UPINDEX')[0]?.change_percent) * 100).toFixed(2)}%
                       </p>
                     </div>
                   </Button>
@@ -407,32 +406,32 @@ export default function Page1() {
                       height: '28px', color: 'white', fontSize: pixel(0.015, 14), fontFamily: 'Calibri, sans-serif', fontWeight: 'bold',
                       margin: `1px 0px 0px ${pixel(0.01, 0)}`, display: 'flex', alignItems: 'center'
                     }}>
-                      {index_card_df.filter(item => item.stock === 'VN30F1M')[0]?.stock}
+                      {index_card_df?.filter(item => item.stock === 'VN30F1M')[0]?.stock}
                     </p>
                     <div style={{ height: '24px', display: 'flex', margin: 0, padding: 0, alignItems: 'center' }}>
                       <p style={{
                         color: 'white', fontSize: pixel(0.012, 10), fontFamily: 'Calibri, sans-serif', fontWeight: 'bold',
                         margin: `0px 0px 0px ${pixel(0.01, 0)}`
                       }}>
-                        {index_card_df.filter(item => item.stock === 'VN30F1M')[0]?.close.toFixed(2)}
+                        {index_card_df?.filter(item => item.stock === 'VN30F1M')[0]?.close.toFixed(2)}
                       </p>
                       <p style={{
                         fontSize: pixel(0.012, 10), fontFamily: 'Calibri, sans-serif',
                         fontWeight: 'bold', margin: `0px 0px 0px ${pixel(0.01, 2)}`, padding: 0,
-                        color: (index_card_df.filter(item => item.stock === 'VN30F1M')[0]?.change_percent) > 0.0001 ? '#24B75E' :
-                          ((index_card_df.filter(item => item.stock === 'VN30F1M')[0]?.change_percent) >= -0.001 &&
-                            (index_card_df.filter(item => item.stock === 'VN30F1M')[0]?.change_percent) <= 0.001 ? '#D0be0f' : '#e14040')
+                        color: (index_card_df?.filter(item => item.stock === 'VN30F1M')[0]?.change_percent) > 0.0001 ? '#24B75E' :
+                          ((index_card_df?.filter(item => item.stock === 'VN30F1M')[0]?.change_percent) >= -0.001 &&
+                            (index_card_df?.filter(item => item.stock === 'VN30F1M')[0]?.change_percent) <= 0.001 ? '#D0be0f' : '#e14040')
                       }}>
-                        {index_card_df.filter(item => item.stock === 'VN30F1M')[0]?.change_value.toFixed(2)}
+                        {index_card_df?.filter(item => item.stock === 'VN30F1M')[0]?.change_value.toFixed(2)}
                       </p>
                       <p style={{
                         fontSize: pixel(0.012, 10), fontFamily: 'Calibri, sans-serif', color: 'white',
                         fontWeight: 'bold', margin: `0px 0px 0px ${pixel(0.01, 2)}`, padding: '0px 3px 0px 3px', borderRadius: '5px',
-                        background: (index_card_df.filter(item => item.stock === 'VN30F1M')[0]?.change_percent) > 0.0001 ? '#24B75E' :
-                          ((index_card_df.filter(item => item.stock === 'VN30F1M')[0]?.change_percent) >= -0.001 &&
-                            (index_card_df.filter(item => item.stock === 'VN30F1M')[0]?.change_percent) <= 0.001 ? '#D0be0f' : '#e14040')
+                        background: (index_card_df?.filter(item => item.stock === 'VN30F1M')[0]?.change_percent) > 0.0001 ? '#24B75E' :
+                          ((index_card_df?.filter(item => item.stock === 'VN30F1M')[0]?.change_percent) >= -0.001 &&
+                            (index_card_df?.filter(item => item.stock === 'VN30F1M')[0]?.change_percent) <= 0.001 ? '#D0be0f' : '#e14040')
                       }}>
-                        {((index_card_df.filter(item => item.stock === 'VN30F1M')[0]?.change_percent) * 100).toFixed(2)}%
+                        {((index_card_df?.filter(item => item.stock === 'VN30F1M')[0]?.change_percent) * 100).toFixed(2)}%
                       </p>
                     </div>
                   </Button>
@@ -447,7 +446,7 @@ export default function Page1() {
                               Khối lượng giao dịch
                             </p>
                             <p style={{ fontSize: pixel(0.016, 14), fontFamily: 'Calibri, sans-serif', color: 'white', fontWeight: 'bold', margin: '5px 0px 0px 10px', padding: 0 }}>
-                              {market_info_df.reduce((sum, item) => sum + item.volume, 0).toLocaleString('en-US')}
+                              {market_info_df?.reduce((sum, item) => sum + item.volume, 0).toLocaleString('en-US')}
                             </p>
                           </div>
                           <div style={{ marginLeft: ww > 800 ? '40px' : '-10px', marginTop: ww > 800 ? '0px' : '10px' }}>
@@ -455,7 +454,7 @@ export default function Page1() {
                               Giá trị giao dịch
                             </p>
                             <p style={{ fontSize: pixel(0.016, 14), fontFamily: 'Calibri, sans-serif', color: 'white', fontWeight: 'bold', margin: '5px 0px 0px 10px', padding: 0 }}>
-                              {Math.round(market_info_df.reduce((sum, item) => sum + item.value, 0)).toLocaleString('en-US')} <span style={{ fontSize: pixel(0.015, 12), color: '#B3B3B3' }}>Tỷ</span>
+                              {Math.round(market_info_df?.reduce((sum, item) => sum + item.value, 0)).toLocaleString('en-US')} <span style={{ fontSize: pixel(0.015, 12), color: '#B3B3B3' }}>Tỷ</span>
                             </p>
                           </div>
                         </>
@@ -478,27 +477,27 @@ export default function Page1() {
                                 color: 'white', fontSize: pixel(0.015, 12), fontFamily: 'Calibri, sans-serif', fontWeight: 'bold',
                                 margin: `0px 0px 0px ${pixel(0.01, 0)}`
                               }}>
-                                {index_card_df.filter(item => item.stock === index_name)[0]?.close.toFixed(2)}
+                                {index_card_df?.filter(item => item.stock === index_name)[0]?.close.toFixed(2)}
                               </p>
                               {ww > 500 && (
                                 <p style={{
                                   fontSize: pixel(0.015, 12), fontFamily: 'Calibri, sans-serif',
                                   fontWeight: 'bold', margin: `0px 0px 0px ${pixel(0.01, 2)}`, padding: 0,
-                                  color: (index_card_df.filter(item => item.stock === index_name)[0]?.change_percent) > 0.0001 ? '#24B75E' :
-                                    ((index_card_df.filter(item => item.stock === index_name)[0]?.change_percent) >= -0.001 &&
-                                      (index_card_df.filter(item => item.stock === index_name)[0]?.change_percent) <= 0.001 ? '#D0be0f' : '#e14040')
+                                  color: (index_card_df?.filter(item => item.stock === index_name)[0]?.change_percent) > 0.0001 ? '#24B75E' :
+                                    ((index_card_df?.filter(item => item.stock === index_name)[0]?.change_percent) >= -0.001 &&
+                                      (index_card_df?.filter(item => item.stock === index_name)[0]?.change_percent) <= 0.001 ? '#D0be0f' : '#e14040')
                                 }}>
-                                  {index_card_df.filter(item => item.stock === index_name)[0]?.change_value.toFixed(2)}
+                                  {index_card_df?.filter(item => item.stock === index_name)[0]?.change_value.toFixed(2)}
                                 </p>
                               )}
                               <p style={{
                                 fontSize: pixel(0.015, 12), fontFamily: 'Calibri, sans-serif', color: 'white',
                                 fontWeight: 'bold', margin: `0px 0px 0px ${pixel(0.01, 2)}`, padding: '0px 3px 0px 3px', borderRadius: '5px',
-                                background: (index_card_df.filter(item => item.stock === index_name)[0]?.change_percent) > 0.0001 ? '#24B75E' :
-                                  ((index_card_df.filter(item => item.stock === index_name)[0]?.change_percent) >= -0.001 &&
-                                    (index_card_df.filter(item => item.stock === index_name)[0]?.change_percent) <= 0.001 ? '#D0be0f' : '#e14040')
+                                background: (index_card_df?.filter(item => item.stock === index_name)[0]?.change_percent) > 0.0001 ? '#24B75E' :
+                                  ((index_card_df?.filter(item => item.stock === index_name)[0]?.change_percent) >= -0.001 &&
+                                    (index_card_df?.filter(item => item.stock === index_name)[0]?.change_percent) <= 0.001 ? '#D0be0f' : '#e14040')
                               }}>
-                                {((index_card_df.filter(item => item.stock === index_name)[0]?.change_percent) * 100).toFixed(2)}%
+                                {((index_card_df?.filter(item => item.stock === index_name)[0]?.change_percent) * 100).toFixed(2)}%
                               </p>
                             </div>
                           </Button>
@@ -715,13 +714,100 @@ export default function Page1() {
                   </Row>
                 </Col>
               </Row >
-              <Row gutter={10} style={{ marginTop: '50px', marginBottom: '10px' }}>
+              <Row gutter={25} style={{ marginTop: '50px', marginBottom: '10px' }}>
                 <Col xs={16} sm={15} md={14} lg={14} xl={14}>
-                  <p style={{ color: 'white', fontSize: pixel(0.025, 18), fontFamily: 'Calibri, sans-serif', margin: 0, padding: 0, fontWeight: 'bold' }}>Trạng thái thị trường</p>
-                  <p style={{ color: 'white', fontSize: pixel(0.011, 10), fontFamily: 'Calibri, sans-serif', margin: 0, padding: 0 }}>{update_time[0]?.date}</p>
+                  <p style={{ color: 'white', fontSize: pixel(0.025, 18), fontFamily: 'Calibri, sans-serif', margin: 0, padding: 0, fontWeight: 'bold' }}>
+                    {tttt_kntd === 'TTTT' ? 'Trạng thái thị trường' : 'Dòng tiền & Thanh khoản'}
+                  </p>
+                  <p style={{ color: 'white', fontSize: pixel(0.011, 10), fontFamily: 'Calibri, sans-serif', margin: 0, padding: 0 }}>{update_time?.[0]?.date}</p>
                 </Col>
                 <Col xs={8} sm={9} md={10} lg={10} xl={10}>
                   {ww > 768 && (
+                    <Radio.Group
+                      className="custom-radio-group"
+                      defaultValue={switch_kntd}
+                      buttonStyle="solid"
+                      onChange={onChangeSwitchKntd}
+                      style={{ display: 'flex', width: '100%', marginTop: '5px', height: '30px' }}
+                    >
+                      <Radio.Button value="NN" className="custom-radio-button"
+                        style={{
+                          fontFamily: 'Calibri, sans-serif', fontSize: pixel(0.013, 12), color: '#dfdfdf'
+                        }}>Khối ngoại
+                      </Radio.Button>
+                      <Radio.Button value="TD" className="custom-radio-button"
+                        style={{
+                          fontFamily: 'Calibri, sans-serif', fontSize: pixel(0.013, 12), color: '#dfdfdf'
+                        }}>Tự doanh
+                      </Radio.Button>
+                    </Radio.Group>
+                  )}
+                </Col>
+              </Row>
+              <Row gutter={10}>
+                <Col xs={12} sm={10} md={6} lg={6} xl={6}>
+                  {ww <= 768 && (
+                    <Radio.Group
+                      className="custom-radio-group" size='small'
+                      defaultValue={switch_kntd}
+                      buttonStyle="solid"
+                      onChange={onChangeSwitchKntd}
+                      style={{ display: 'flex', width: '100%', marginTop: '5px', height: '30px' }}
+                    >
+                      <Radio.Button value="NN" className="custom-radio-button"
+                        style={{
+                          fontFamily: 'Calibri, sans-serif', fontSize: pixel(0.013, 12), color: '#dfdfdf'
+                        }}>Khối ngoại
+                      </Radio.Button>
+                      <Radio.Button value="TD" className="custom-radio-button"
+                        style={{
+                          fontFamily: 'Calibri, sans-serif', fontSize: pixel(0.013, 12), color: '#dfdfdf'
+                        }}>Tự doanh
+                      </Radio.Button>
+                    </Radio.Group>
+                  )}
+                  <Radio.Group
+                    className="custom-radio-group" size='small'
+                    defaultValue={id_kntd}
+                    buttonStyle="solid"
+                    onChange={onChangeKntdId}
+                    style={{ display: 'flex', width: '100%', marginTop: ww > 768 ? '10px' : '5px', height: '40px' }}
+                  >
+                    <Radio.Button value="HSX" className="custom-radio-button"
+                      style={{
+                        fontFamily: 'Calibri, sans-serif', fontSize: pixel(0.013, 12), color: '#dfdfdf'
+                      }}>HSX
+                    </Radio.Button>
+                    <Radio.Button value="HNX" className="custom-radio-button"
+                      style={{
+                        fontFamily: 'Calibri, sans-serif', fontSize: pixel(0.013, 12), color: '#dfdfdf'
+                      }}>HNX
+                    </Radio.Button>
+                    <Radio.Button value="UPCOM" className="custom-radio-button"
+                      style={{
+                        fontFamily: 'Calibri, sans-serif', fontSize: pixel(0.013, 12), color: '#dfdfdf'
+                      }}>UPCOM
+                    </Radio.Button>
+                  </Radio.Group>
+                  <NnTdBuySellTable data={nn_td_buy_sell_df} id={id_kntd} switch_kntd={switch_kntd}
+                    fontSize={pixel(0.013, 11)} lineHeight={ww > 768 ? '34px' : '23px'} width='100%' height={ww > 768 ? '145px' : '115px'} marginTop={ww > 768 ? '0px' : '5px'} />
+                </Col>
+                <Col xs={12} sm={14} md={18} lg={18} xl={18}>
+                  <NnTdHispory data={nn_td_20p_df} id={id_kntd} switch_kntd={switch_kntd} ww={ww} fontSize={pixel(0.015, 17)} />
+                </Col>
+              </Row>
+              <Row>
+                <NdTdTopStockChart data={nn_td_top_stock} ww={ww} pixel={pixel} id={id_kntd} switch_kntd={switch_kntd} />
+              </Row>
+              <Row gutter={25} style={{ marginTop: '50px', marginBottom: '10px' }}>
+                <Col xs={16} sm={15} md={14} lg={14} xl={14}>
+                  <p style={{ color: 'white', fontSize: pixel(0.025, 18), fontFamily: 'Calibri, sans-serif', margin: 0, padding: 0, fontWeight: 'bold' }}>
+                    {tttt_kntd === 'TTTT' ? 'Trạng thái thị trường' : 'Dòng tiền & Thanh khoản'}
+                  </p>
+                  <p style={{ color: 'white', fontSize: pixel(0.011, 10), fontFamily: 'Calibri, sans-serif', margin: 0, padding: 0 }}>{update_time?.[0]?.date}</p>
+                </Col>
+                <Col xs={8} sm={9} md={10} lg={10} xl={10}>
+                  {ww > 900 && (
                     <Radio.Group
                       className="custom-radio-group"
                       defaultValue={tttt_kntd}
@@ -734,14 +820,14 @@ export default function Page1() {
                           fontFamily: 'Calibri, sans-serif', fontSize: pixel(0.013, 12), color: '#dfdfdf'
                         }}>Trạng thái thị trường
                       </Radio.Button>
-                      <Radio.Button value="KNTD" className="custom-radio-button"
+                      <Radio.Button value="DTTK" className="custom-radio-button"
                         style={{
                           fontFamily: 'Calibri, sans-serif', fontSize: pixel(0.013, 12), color: '#dfdfdf'
-                        }}>Khối ngoại/Tự doanh
+                        }}>Dòng tiền & Thanh khoản
                       </Radio.Button>
                     </Radio.Group>
                   )}
-                  {ww <= 768 && (
+                  {ww <= 900 && (
                     <Menu
                       theme='dark'
                       onClick={onChangeTtttMobile}
@@ -767,12 +853,12 @@ export default function Page1() {
                         <SentimentGaugeChart data={market_sentiment} width='100%' height='150px' ww={ww} />
                       </div>
                       <div style={{
-                        background: getColorSentiment(market_sentiment[0]?.last_ratio),
-                        padding: '10px', borderRadius: '5px', margin: 0, display: 'flex', flexDirection: 'column', justifyContent: 'center', marginTop: '10px', height: '40px'
+                        background: getColorSentiment(market_sentiment?.[0]?.last_ratio),
+                        padding: '10px', borderRadius: '5px', margin: 0, display: 'flex', flexDirection: 'column', justifyContent: 'center', marginTop: '10px', height: '30px'
                       }}>
                         <p style={{
                           color: 'white', fontSize: pixel(0.016, 11), fontFamily: 'Calibri, sans-serif', fontWeight: 'bold', margin: 0, padding: 0, width: '100%', display: 'flex', justifyContent: 'center'
-                        }}> {market_sentiment[0]?.last_sentiment}
+                        }}> {market_sentiment?.[0]?.last_sentiment}
                         </p>
                       </div>
                     </Col>
@@ -790,12 +876,12 @@ export default function Page1() {
                         <LiquidityGaugeChart data={itd_score_liquidity_last} width='100%' height='150px' ww={ww} />
                       </div>
                       <div style={{
-                        background: getColorLiquidity(itd_score_liquidity_last.filter((item: any) => item.name === 'Thị trường')[0]?.liquidity * 100),
-                        padding: '10px', borderRadius: '5px', margin: 0, display: 'flex', flexDirection: 'column', justifyContent: 'center', marginTop: '10px', height: '40px'
+                        background: getColorLiquidity(itd_score_liquidity_last?.filter((item: any) => item.name === 'Thị trường')[0]?.liquidity * 100),
+                        padding: '10px', borderRadius: '5px', margin: 0, display: 'flex', flexDirection: 'column', justifyContent: 'center', marginTop: '10px', height: '30px'
                       }}>
                         <p style={{
                           color: 'white', fontSize: pixel(0.016, 11), fontFamily: 'Calibri, sans-serif', fontWeight: 'bold', margin: 0, padding: 0, width: '100%', display: 'flex', justifyContent: 'center'
-                        }}> {itd_score_liquidity_last.filter((item: any) => item.name === 'Thị trường')[0]?.liquid_state}
+                        }}> {itd_score_liquidity_last?.filter((item: any) => item.name === 'Thị trường')[0]?.liquid_state}
                         </p>
                       </div>
                     </Col>
@@ -805,67 +891,11 @@ export default function Page1() {
                   </Row>
                 </>
               )}
-              {tttt_kntd === 'KNTD' && (
+              {tttt_kntd === 'DTTK' && (
                 <>
-                  <Row gutter={10}>
-                    <Col xs={12} sm={10} md={6} lg={6} xl={6}>
-                      <Radio.Group
-                        className="custom-radio-group" size='small'
-                        defaultValue={switch_kntd}
-                        buttonStyle="solid"
-                        onChange={onChangeSwitchKntd}
-                        style={{ display: 'flex', width: '100%', marginTop: '5px', height: '30px' }}
-                      >
-                        <Radio.Button value="NN" className="custom-radio-button"
-                          style={{
-                            fontFamily: 'Calibri, sans-serif', fontSize: pixel(0.013, 12), color: '#dfdfdf'
-                          }}>Khối ngoại
-                        </Radio.Button>
-                        <Radio.Button value="TD" className="custom-radio-button"
-                          style={{
-                            fontFamily: 'Calibri, sans-serif', fontSize: pixel(0.013, 12), color: '#dfdfdf'
-                          }}>Tự doanh
-                        </Radio.Button>
-                      </Radio.Group>
-                      <Radio.Group
-                        className="custom-radio-group" size='small'
-                        defaultValue={id_kntd}
-                        buttonStyle="solid"
-                        onChange={onChangeKntdId}
-                        style={{ display: 'flex', width: '100%', marginTop: '5px', height: '40px' }}
-                      >
-                        <Radio.Button value="HSX" className="custom-radio-button"
-                          style={{
-                            fontFamily: 'Calibri, sans-serif', fontSize: pixel(0.013, 12), color: '#dfdfdf'
-                          }}>HSX
-                        </Radio.Button>
-                        <Radio.Button value="HNX" className="custom-radio-button"
-                          style={{
-                            fontFamily: 'Calibri, sans-serif', fontSize: pixel(0.013, 12), color: '#dfdfdf'
-                          }}>HNX
-                        </Radio.Button>
-                        <Radio.Button value="UPCOM" className="custom-radio-button"
-                          style={{
-                            fontFamily: 'Calibri, sans-serif', fontSize: pixel(0.013, 12), color: '#dfdfdf'
-                          }}>UPCOM
-                        </Radio.Button>
-                      </Radio.Group>
-                      <NnTdBuySellTable data={nn_td_buy_sell_df} id={id_kntd} switch_kntd={switch_kntd}
-                        fontSize={pixel(0.013, 11)} lineHeight='23px' width='100%' height='115px' />
-                    </Col>
-                    <Col xs={12} sm={14} md={18} lg={18} xl={18}>
-                      <NnTdHispory data={nn_td_20p_df} id={id_kntd} switch_kntd={switch_kntd} ww={ww} fontSize={pixel(0.015, 17)} />
-                    </Col>
-                  </Row>
-                  <Row>
-                    <NdTdTopStockChart data={nn_td_top_stock} ww={ww} pixel={pixel} id={id_kntd} switch_kntd={switch_kntd} />
-                  </Row>
+
                 </>
               )}
-
-
-
-
 
 
 

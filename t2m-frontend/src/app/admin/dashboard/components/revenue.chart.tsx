@@ -63,7 +63,7 @@ const RevenueChart: React.FC<LineChartProps> = ({ width, height, data }) => {
   const pricesData = sortedDates.map(date => groupedData[date]);
 
   const chartData: any = {
-    labels: sortedDates,
+    labels: sortedDates  || [],
     datasets: [
       {
         type: 'line',
